@@ -1,0 +1,6 @@
+Build
+3rdParty/assimp/build
+Documentation
+Resources
+*.user
+*.o
