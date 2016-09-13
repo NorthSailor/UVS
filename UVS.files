@@ -22,6 +22,7 @@ FV/Texture2D.cpp
 FV/Texture2D.h
 FV/VertexArray.cpp
 FV/VertexArray.h
+Shaders/invert.glsl
 Shaders/model.glsl
 Shaders/simple.glsl
 Simulator/main.cpp

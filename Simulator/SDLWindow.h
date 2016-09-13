@@ -11,10 +11,13 @@ public:
     SDLWindow(std::string title, bool fullscreen = false);
 
     void Show();
+    int GetWidth() const { return m_width; }
+    int GetHeight() const { return m_height; }
 
 protected:
     SDL_Window *m_window;
     bool m_shouldQuit;
+    int m_width, m_height; // In pixels!
 
     virtual void UpdateLoop();
 

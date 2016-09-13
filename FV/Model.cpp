@@ -9,7 +9,8 @@ using namespace FV;
 using namespace std;
 using namespace glm;
 
-Model::Node GetNodeRecursive(aiNode *aNode, vector<shared_ptr<Mesh>>& meshes)
+Model::Node GetNodeRecursive(aiNode *aNode,
+                             vector<shared_ptr<ModelMesh>>& meshes)
 {
     Model::Node node;
     node.transform = glm::make_mat4((const float*)(&aNode->mTransformation));
@@ -94,7 +95,7 @@ Model::Model(string filename, ObjectLoader &loader)
     }
 
     for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
-        shared_ptr<Mesh> mesh = make_shared<Mesh>(scene->mMeshes[i]);
+        shared_ptr<ModelMesh> mesh = parse_mesh_from_assimp(scene->mMeshes[i]);
         mesh->material = m_materials.begin() +
                 scene->mMeshes[i]->mMaterialIndex;
         m_meshes.push_back(mesh);
@@ -118,13 +119,15 @@ void Model::DrawNodeRecursive(mat4 transform, const Node &node,
     uniforms.transform.Set(currentTransform);
 
     for (auto meshIt : node.meshes) {
-        shared_ptr<Mesh> mesh = *meshIt;
+        shared_ptr<ModelMesh> mesh = *meshIt;
         mesh->VAO.Bind();
         Material mat = *(mesh->material);
         if (mat.diffuseTexture != m_textures.end())
             uniforms.diffuseSampler.Set(*(mat.diffuseTexture), 0);
 
-        glDrawElements(GL_TRIANGLES, mesh->indexCount, GL_UNSIGNED_INT, (void*)0);
+        glDrawElements(GL_TRIANGLES, mesh->indexCount,
+                       GL_UNSIGNED_INT, (void*)0);
+        assert(glGetError() == 0);
     }
 
     for (const Node& child : node.children) {

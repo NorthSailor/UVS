@@ -14,6 +14,18 @@ struct aiMesh;
 
 namespace FV {
 
+struct Pos3N3UV2 {
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec2 UV;
+};
+
+// Mainly for drawing quads.
+struct Pos2UV2 {
+    glm::vec2 position;
+    glm::vec2 UV;
+};
+
 typedef std::vector<std::shared_ptr<Texture2D>>::iterator TextureIterator;
 struct Material {
     TextureIterator diffuseTexture;
@@ -28,24 +40,31 @@ typedef std::vector<Material>::iterator MaterialIterator;
  * It does not carry any semantic information like orientation, hierarchy or
  * transformations.
  */
+template <typename V>
 class Mesh
 {
 public:
-
-    Mesh(const aiMesh *mesh);
-
-    struct Pos3N3UV2 {
-        glm::vec3 position;
-        glm::vec3 normal;
-        glm::vec2 UV;
-    };
+    Mesh();
 
     VertexArray VAO;
-    Buffer<Pos3N3UV2> vertexBuffer;
+    Buffer<V> vertexBuffer;
     IndexBuffer indexBuffer;
     int indexCount;
     MaterialIterator material;
+
 };
+
+template <typename V>
+Mesh<V>::Mesh() :
+    indexBuffer(FV::IndexBuffer::INDEX)
+{
+}
+
+typedef Mesh<Pos3N3UV2> ModelMesh;
+
+std::shared_ptr<ModelMesh> parse_mesh_from_assimp(aiMesh *aimesh);
+
+std::shared_ptr<Mesh<Pos2UV2>> create_quad_mesh();
 
 }
 

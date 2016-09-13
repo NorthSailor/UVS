@@ -4,6 +4,8 @@
 #include "SDLWindow.h"
 #include <FV/ObjectLoader.h>
 #include <FV/Model.h>
+#include <FV/FrameBuffer.h>
+#include <FV/Texture2D.h>
 
 class UVSWindow : public SDLWindow
 {
@@ -19,8 +21,14 @@ protected:
     std::shared_ptr<FV::Model> m_f16;
     FV::Model::RenderingUniforms m_renderingUniforms;
     std::shared_ptr<FV::Program> m_program;
+    std::shared_ptr<FV::Program> m_invertProg;
+    FV::Program::Uniform m_texSampler;
 
     FV::ObjectLoader m_loader;
+
+    FV::FrameBuffer m_fb;
+    std::shared_ptr<FV::Texture2D> m_colorTex;
+    std::shared_ptr<FV::Texture2D> m_depthStencilTex;
 };
 
 #endif // UVSWINDOW_H

@@ -62,6 +62,7 @@ public:
         RGBA32UI = GL_RGBA32UI,
         DEPTH = GL_DEPTH_COMPONENT,
         DEPTH_STENCIL = GL_DEPTH_STENCIL,
+        DEPTH24_STENCIL8 = GL_DEPTH24_STENCIL8,
         RED = GL_RED,
         GREEN = GL_GREEN,
         BLUE = GL_BLUE,
@@ -95,7 +96,8 @@ public:
         USHORT = GL_UNSIGNED_SHORT,
         UINT = GL_UNSIGNED_INT,
         FLOAT = GL_FLOAT,
-        HALF_FLOAT = GL_HALF_FLOAT
+        HALF_FLOAT = GL_HALF_FLOAT,
+        UINT24_8 = GL_UNSIGNED_INT_24_8
     };
 
     /**
@@ -121,14 +123,18 @@ public:
      */
     void ReleaseUnit();
 
-    /**
-     * Basically calls glGenerateMipmap() on the texture.
-     */
+    //! Basically calls glGenerateMipmap() on the texture.
+    //! @note The texture must be bound with Bind().
     void GenerateMipmaps() const;
 
     /** Gets the underlying OpenGL ID. */
     inline GLuint GetID() const {
         return m_ID;
+    }
+
+    //! Gets the texture's target.
+    inline Target GetTarget() const {
+        return m_target;
     }
 
     bool operator==(const Texture& texture);

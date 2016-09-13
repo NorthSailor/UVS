@@ -9,7 +9,7 @@ Texture2D::Texture2D() :
 {
 }
 
-void Texture2D::SetImage2D(int width, int height,
+void Texture2D::SetImage2DAsync(int width, int height,
                            void *data,
                            Format iformat, Type type, Format format)
 {
@@ -20,6 +20,23 @@ void Texture2D::SetImage2D(int width, int height,
     m_type = type;
     m_format = format;
     m_final = false;
+}
+
+void Texture2D::SetImage2D(int width, int height, void *data, Format iformat,
+                           Type type, Format format)
+{
+    m_width = width;
+    m_height = height;
+    m_data = data;
+    m_iformat = iformat;
+    m_type = type;
+    m_format = format;
+    m_final = true;
+    Bind(0);
+    glTexImage2D(GL_TEXTURE_2D, 0, m_iformat, m_width, m_height, 0, m_format,
+                 m_type, m_data);
+    glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 }
 
 void Texture2D::LoadImage2D(std::string filename, Format format)
@@ -37,6 +54,7 @@ void Texture2D::LoadImage2D(std::string filename, Format format)
     m_format = format;
     m_iformat = format;
     m_type = UBYTE;
+    m_final = false;
 }
 
 void Texture2D::SendToGPU()

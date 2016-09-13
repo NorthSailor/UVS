@@ -26,7 +26,9 @@ public:
      */
     Model(std::string filename, ObjectLoader &loader);
 
-    typedef std::vector<std::shared_ptr<Mesh>>::iterator MeshIterator;
+    typedef std::vector<std::shared_ptr<ModelMesh>>::iterator
+        MeshIterator;
+
     struct Node
     {
         /** A name given by the model artist. */
@@ -66,7 +68,7 @@ public:
 
 protected:
     Node m_rootNode;
-    std::vector<std::shared_ptr<Mesh>> m_meshes;
+    std::vector<std::shared_ptr<ModelMesh>> m_meshes;
     std::vector<std::shared_ptr<Texture2D>> m_textures;
     std::vector<Material> m_materials;
 

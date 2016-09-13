@@ -9,12 +9,14 @@ using namespace std::chrono;
 using namespace FV;
 
 SDLWindow::SDLWindow(std::string title, bool fullscreen) :
-    m_shouldQuit(false)
+    m_shouldQuit(false),
+    m_width(1024),
+    m_height(768)
 {
     m_window = SDL_CreateWindow(title.c_str(),
                                 SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED,
-                                1024, 768,
+                                m_width, m_height,
                                 SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
     if (m_window == nullptr)
