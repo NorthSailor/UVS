@@ -6,7 +6,7 @@
 #include "Buffer.h"
 #include "Common.h"
 #include "Program.h"
-#include "Texture2D.h"
+#include "Texture.h"
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
@@ -26,7 +26,7 @@ struct Pos2UV2 {
     glm::vec2 UV;
 };
 
-typedef std::vector<std::shared_ptr<Texture2D>>::iterator TextureIterator;
+typedef std::vector<std::shared_ptr<Texture>>::iterator TextureIterator;
 struct Material {
     TextureIterator diffuseTexture;
     TextureIterator specularTexture;

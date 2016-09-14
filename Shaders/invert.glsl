@@ -50,6 +50,7 @@ void main() {
 	for (int i = 0; i < 9; i++) {
 		color += kernel[i] * texture2D(tex, UV + offsets[i]);
 	}
+	color = 1.0 - color;
 	color.g = color.r + color.g + color.b;
 	color.g *= 0.33f;
 	color.r = 0;

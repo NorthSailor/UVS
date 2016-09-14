@@ -7,7 +7,7 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
-#include "Texture2D.h"
+#include "Texture.h"
 #include "Program.h"
 
 namespace FV {
@@ -40,7 +40,7 @@ public:
      * @note Make sure that FinishLoading() is called before you attempt to
      * 		 use the texture.
      */
-    std::shared_ptr<Texture2D> LoadTexture2D(std::string path);
+    std::shared_ptr<Texture> LoadTexture2D(std::string path);
 
     /**
      * Loads a program from a single program file.
@@ -69,14 +69,14 @@ protected:
     std::string m_path;
     std::string m_shaderPath;
 
-    std::map<std::string, std::weak_ptr<Texture2D>> m_textures2D;
+    std::map<std::string, std::weak_ptr<Texture>> m_textures;
     std::map<std::string, std::weak_ptr<Program>> m_programs;
 
-    typedef std::map<std::string, std::weak_ptr<Texture2D>>::iterator
-        Tex2DIterator;
-    std::queue<Tex2DIterator> m_texturesToLoad;
+    typedef std::map<std::string, std::weak_ptr<Texture>>::iterator
+        TexIterator;
+    std::queue<TexIterator> m_texturesToLoad;
 
-    void ProcessTexture(Tex2DIterator it);
+    void ProcessTexture(TexIterator it);
 
     int m_texLoadingCount = 0;
     std::mutex m_texMutex;

@@ -5,7 +5,7 @@
 #include <FV/ObjectLoader.h>
 #include <FV/Model.h>
 #include <FV/FrameBuffer.h>
-#include <FV/Texture2D.h>
+#include <FV/Texture.h>
 
 class UVSWindow : public SDLWindow
 {
@@ -27,8 +27,8 @@ protected:
     FV::ObjectLoader m_loader;
 
     FV::FrameBuffer m_fb;
-    std::shared_ptr<FV::Texture2D> m_colorTex;
-    std::shared_ptr<FV::Texture2D> m_depthStencilTex;
+    std::shared_ptr<FV::Texture> m_colorTex;
+    std::shared_ptr<FV::Texture> m_depthStencilTex;
 };
 
 #endif // UVSWINDOW_H

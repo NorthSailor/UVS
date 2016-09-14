@@ -11,19 +11,19 @@ ObjectLoader::ObjectLoader(std::string path) :
 {
 }
 
-shared_ptr<Texture2D> ObjectLoader::LoadTexture2D(string path)
+shared_ptr<Texture> ObjectLoader::LoadTexture2D(string path)
 {
     // Search if the texture already exists
-    auto searchResult = m_textures2D.find(path);
-    if (searchResult != m_textures2D.end() &&
+    auto searchResult = m_textures.find(path);
+    if (searchResult != m_textures.end() &&
             searchResult->second.expired() == false) {
         // The texture is already loaded.
         return searchResult->second.lock();
     } else {
         // The texture must be loaded.
-        shared_ptr<Texture2D> texture = make_shared<Texture2D>();
+        shared_ptr<Texture> texture = make_shared<Texture>(Texture::TEX_2D);
         // Add it to the lists
-        Tex2DIterator it = m_textures2D.emplace(path, texture).first;
+        TexIterator it = m_textures.emplace(path, texture).first;
         m_texLoadingCount++;
         thread textureThread(&ObjectLoader::ProcessTexture, this, it);
         textureThread.detach();
@@ -98,10 +98,10 @@ void ObjectLoader::FinishLoading()
         m_texCV.wait(lk);
 }
 
-void ObjectLoader::ProcessTexture(Tex2DIterator it)
+void ObjectLoader::ProcessTexture(TexIterator it)
 {
-    shared_ptr<Texture2D> texture = it->second.lock();
-    texture->LoadImage2D(m_path + it->first, Texture2D::RGBA);
+    shared_ptr<Texture> texture = it->second.lock();
+    texture->LoadImage2D(m_path + it->first, Texture::RGBA);
     lock_guard<mutex> lk(m_texMutex);
     m_texLoadingCount--;
     m_texCV.notify_all();

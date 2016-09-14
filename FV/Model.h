@@ -5,7 +5,7 @@
 #include <memory>
 #include "glm/mat4x4.hpp"
 #include "Mesh.h"
-#include "Texture2D.h"
+#include "Texture.h"
 #include "Program.h"
 
 namespace FV {
@@ -69,7 +69,7 @@ public:
 protected:
     Node m_rootNode;
     std::vector<std::shared_ptr<ModelMesh>> m_meshes;
-    std::vector<std::shared_ptr<Texture2D>> m_textures;
+    std::vector<std::shared_ptr<Texture>> m_textures;
     std::vector<Material> m_materials;
 
     void DrawNodeRecursive(glm::mat4 transform, const Node& node,

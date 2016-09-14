@@ -18,8 +18,6 @@ FV/Shader.cpp
 FV/Shader.h
 FV/Texture.cpp
 FV/Texture.h
-FV/Texture2D.cpp
-FV/Texture2D.h
 FV/VertexArray.cpp
 FV/VertexArray.h
 Shaders/invert.glsl

@@ -38,10 +38,10 @@ void UVSWindow::Initialize()
 
     m_program->GetUniform("ViewProjection").Set(projection * view);
 
-    m_colorTex = make_shared<Texture2D>();
+    m_colorTex = make_shared<Texture>(Texture::TEX_2D);
     m_colorTex->SetImage2D(GetWidth(), GetHeight(),
                           nullptr, Texture::RGB, Texture::UBYTE, Texture::RGB);
-    m_depthStencilTex = make_shared<Texture2D>();
+    m_depthStencilTex = make_shared<Texture>(Texture::TEX_2D);
     m_depthStencilTex->SetImage2D(GetWidth(), GetHeight(),
                                  nullptr, Texture::DEPTH24_STENCIL8,
                                  Texture::UINT24_8, Texture::DEPTH_STENCIL);
