@@ -14,7 +14,8 @@ class Texture
 {
 public:
     enum Target {
-        TEX_2D = GL_TEXTURE_2D
+        TEX_2D = GL_TEXTURE_2D,
+        TEX_2D_MULTISAMPLE = GL_TEXTURE_2D_MULTISAMPLE
     };
 
     enum Format {
@@ -100,6 +101,22 @@ public:
         UINT24_8 = GL_UNSIGNED_INT_24_8
     };
 
+    enum FilteringMethod {
+        NEAREST = GL_NEAREST,
+        LINEAR = GL_LINEAR,
+        NEAREST_MIPMAP_NEAREST = GL_NEAREST_MIPMAP_NEAREST,
+        NEAREST_MIPMAP_LINEAR = GL_NEAREST_MIPMAP_LINEAR,
+        LINEAR_MIPMAP_NEAREST = GL_LINEAR_MIPMAP_NEAREST,
+        LINEAR_MIPMAP_LINEAR = GL_LINEAR_MIPMAP_LINEAR
+    };
+
+    enum WrapMode {
+        REPEAT = GL_REPEAT,
+        MIRRORED_REPEAT = GL_MIRRORED_REPEAT,
+        CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE,
+        CLAMP_TO_BORDER = GL_CLAMP_TO_BORDER
+    };
+
     /**
      * Creates a new texture object of the given type.
      * @param target
@@ -142,6 +159,31 @@ public:
     // 2D textures
 
     /**
+     * Sets the texture filtering mode.
+     * @param minifying The minifying filtering mode (scaling down).
+     * @param magnifying The magnifying filtering mode (scaling up).
+     * @note The texture must be bound.
+     */
+    void SetFiltering(FilteringMethod minifying, FilteringMethod magnifying);
+
+    /**
+     * Sets the wrapping mode for the texture.
+     * @param s Wrapping mode for the s axis.
+     * @param t Wrapping mode for the t axis.
+     * @note The texture must be bound.
+     */
+    void SetWrap(WrapMode s, WrapMode t);
+
+    /**
+     * Sets the wrapping mode for the texture.
+     * @param s Wrapping mode for the s axis.
+     * @param t Wrapping mode for the t axis.
+     * @param r Wrapping mode for the r axis.
+     * @note The texture must be bound.
+     */
+    void SetWrap(WrapMode s, WrapMode t, WrapMode r);
+
+    /**
      * Sets the contents of the texture.
      * The data won't be send to the GPU until right before the texture is
      * used. This allows you to load the data in a separate thread.
@@ -168,11 +210,12 @@ public:
      * @param iformat The internal format of the texture.
      * @param type The type of the pixel components.
      * @param format The format of the data.
+     * @param border The texture's border color.
      * @note The texture is also bound on unit 0.
      */
     void SetImage2D(int width, int height, void *data,
                     Format iformat = RGBA, Type type = UBYTE,
-                    Format format = RGBA);
+                    Format format = RGBA, int border = 0);
 
     /**
      * Loads a texture from the given filename.
@@ -180,6 +223,17 @@ public:
      * @param format Format of the file's contents.
      */
     void LoadImage2D(std::string filename, Format format = RGBA);
+
+    /**
+     * Sets the multisample image parameters.
+     * @param width The width of the texture in texels.
+     * @param height The height of the texture in texels.
+     * @param samples The number of samples to use.
+     * @param iformat The internal format of the texture.
+     * @note The texture is bound at unit 0.
+     */
+    void SetImage2DMultisample(int width, int height, int samples = 8,
+                               Format iformat = RGBA);
 
 protected:
     GLuint m_ID;

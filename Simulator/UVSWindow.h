@@ -12,7 +12,6 @@ class UVSWindow : public SDLWindow
 public:
     UVSWindow(bool fullscreen = false);
 
-
 protected:
     virtual void UpdateLoop();
     virtual void Initialize();

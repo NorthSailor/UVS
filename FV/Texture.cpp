@@ -50,6 +50,25 @@ bool Texture::operator ==(const Texture& texture)
     return m_ID == texture.m_ID;
 }
 
+void Texture::SetFiltering(FilteringMethod minifying,
+                           FilteringMethod magnifying)
+{
+    glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, minifying);
+    glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, magnifying);
+}
+
+void Texture::SetWrap(WrapMode s, WrapMode t)
+{
+    glTexParameteri(m_target, GL_TEXTURE_WRAP_S, s);
+    glTexParameteri(m_target, GL_TEXTURE_WRAP_T, t);
+}
+
+void Texture::SetWrap(WrapMode s, WrapMode t, WrapMode r)
+{
+    SetWrap(s, t);
+    glTexParameteri(m_target, GL_TEXTURE_WRAP_R, r);
+}
+
 void Texture::SetImage2DAsync(int width, int height,
                            void *data,
                            Format iformat, Type type, Format format)
@@ -64,7 +83,7 @@ void Texture::SetImage2DAsync(int width, int height,
 }
 
 void Texture::SetImage2D(int width, int height, void *data, Format iformat,
-                           Type type, Format format)
+                           Type type, Format format, int border)
 {
     m_width = width;
     m_height = height;
@@ -74,10 +93,8 @@ void Texture::SetImage2D(int width, int height, void *data, Format iformat,
     m_format = format;
     m_final = true;
     Bind(0);
-    glTexImage2D(GL_TEXTURE_2D, 0, m_iformat, m_width, m_height, 0, m_format,
-                 m_type, m_data);
-    glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, m_iformat, m_width, m_height, border,
+                 m_format, m_type, m_data);
 }
 
 void Texture::LoadImage2D(std::string filename, Format format)
@@ -98,6 +115,18 @@ void Texture::LoadImage2D(std::string filename, Format format)
     m_type = UBYTE;
     m_final = false;
     m_hasMipmaps = true;
+}
+
+void Texture::SetImage2DMultisample(int width, int height, int samples,
+                                    Format iformat)
+{
+    m_width = width;
+    m_height = height;
+    m_iformat = iformat;
+    m_final = true;
+    Bind(0);
+    glTexImage2DMultisample(m_target, samples, m_iformat,
+                            m_width, m_height, GL_TRUE);
 }
 
 void Texture::SendToGPU()

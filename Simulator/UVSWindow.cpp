@@ -41,10 +41,12 @@ void UVSWindow::Initialize()
     m_colorTex = make_shared<Texture>(Texture::TEX_2D);
     m_colorTex->SetImage2D(GetWidth(), GetHeight(),
                           nullptr, Texture::RGB, Texture::UBYTE, Texture::RGB);
+    m_colorTex->SetFiltering(Texture::NEAREST, Texture::NEAREST);
     m_depthStencilTex = make_shared<Texture>(Texture::TEX_2D);
     m_depthStencilTex->SetImage2D(GetWidth(), GetHeight(),
                                  nullptr, Texture::DEPTH24_STENCIL8,
                                  Texture::UINT24_8, Texture::DEPTH_STENCIL);
+    m_depthStencilTex->SetFiltering(Texture::NEAREST, Texture::NEAREST);
     m_fb.Bind();
     m_colorTex->Bind();
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTex->GetID(), 0);
