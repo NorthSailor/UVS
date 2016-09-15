@@ -55,7 +55,62 @@ void FrameBuffer::SetClearColor(glm::vec4 color)
     glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void FrameBuffer::Clear(ClearBit bit)
+void FrameBuffer::Clear(BufferBit bit)
 {
     glClear(bit);
+}
+
+FrameBuffer::RenderBuffer::RenderBuffer()
+{
+    glGenRenderbuffers(1, &m_ID);
+}
+
+FrameBuffer::RenderBuffer::~RenderBuffer()
+{
+    glDeleteRenderbuffers(1, &m_ID);
+}
+
+void FrameBuffer::RenderBuffer::Bind()
+{
+    glBindRenderbuffer(GL_RENDERBUFFER, m_ID);
+}
+
+void FrameBuffer::RenderBuffer::SetStorage(int width, int height,
+                                           Texture::Format format)
+{
+    glRenderbufferStorage(GL_RENDERBUFFER, format, width, height);
+}
+
+void FrameBuffer::RenderBuffer::SetStorageMultisample(int width, int height,
+                                                      int samples,
+                                                      Texture::Format format)
+{
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples,
+        format, width, height);
+}
+
+void FrameBuffer::Attach(Attachment a, shared_ptr<Texture> texture)
+{
+    switch (texture->GetTarget()) {
+    case Texture::TEX_2D:
+    case Texture::TEX_2D_MULTISAMPLE:
+        glFramebufferTexture2D(GL_FRAMEBUFFER, a,
+                               texture->GetTarget(), texture->GetID(), 0);
+        break;
+    default:
+        throw Exception("Don't know how to attach other texture types.");
+    }
+}
+
+void FrameBuffer::Attach(Attachment a, const RenderBuffer& rb)
+{
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, a, GL_RENDERBUFFER, rb.GetID());
+}
+
+void FrameBuffer::Blit(int x1, int y1, int w1, int h1,
+                       int x2, int y2, int w2, int h2,
+                       FrameBuffer::BufferBit bit,
+                       Texture::FilteringMethod filtering)
+{
+    glBlitFramebuffer(x1, y1, w1, h1, x2, y2, w2, h2, bit, filtering);
 }

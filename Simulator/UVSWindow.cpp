@@ -19,12 +19,9 @@ UVSWindow::UVSWindow(bool fullscreen) :
 void UVSWindow::Initialize()
 {
     glClearColor(0.6f, 0.5f, 0.4f, 1.0f);
+
     m_f16 = make_shared<Model>("Resources/F-16/F-16C_FightingFalcon.obj", m_loader);
-    auto start = high_resolution_clock::now();
-    m_loader.FinishLoading();
-    auto end = high_resolution_clock::now();
-    Log(INFO, "Total model loading time %.3fs.",
-        0.001f * duration_cast<milliseconds>(end - start).count());
+
     m_program = m_loader.LoadProgram("model.glsl");
     m_program->Use();
     m_renderingUniforms.transform = m_program->GetUniform("ModelTransform");
@@ -38,26 +35,28 @@ void UVSWindow::Initialize()
 
     m_program->GetUniform("ViewProjection").Set(projection * view);
 
-    m_colorTex = make_shared<Texture>(Texture::TEX_2D);
-    m_colorTex->SetImage2D(GetWidth(), GetHeight(),
-                          nullptr, Texture::RGB, Texture::UBYTE, Texture::RGB);
-    m_colorTex->SetFiltering(Texture::NEAREST, Texture::NEAREST);
-    m_depthStencilTex = make_shared<Texture>(Texture::TEX_2D);
-    m_depthStencilTex->SetImage2D(GetWidth(), GetHeight(),
-                                 nullptr, Texture::DEPTH24_STENCIL8,
-                                 Texture::UINT24_8, Texture::DEPTH_STENCIL);
-    m_depthStencilTex->SetFiltering(Texture::NEAREST, Texture::NEAREST);
     m_fb.Bind();
-    m_colorTex->Bind();
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTex->GetID(), 0);
-    m_depthStencilTex->Bind();
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_depthStencilTex->GetID(), 0);
+    m_colorBuffer.Bind();
+    m_colorBuffer.SetStorageMultisample(GetWidth(), GetHeight(), 8, Texture::RGBA);
+    m_fb.Attach(FrameBuffer::COLOR0, m_colorBuffer);
+    m_depthStencilBuffer.Bind();
+    m_depthStencilBuffer.SetStorageMultisample(GetWidth(), GetHeight(), 8, Texture::DEPTH24_STENCIL8);
+    m_fb.Attach(FrameBuffer::DEPTH_STENCIL, m_depthStencilBuffer);
+
+    m_fb2.Bind();
+    m_colorTex = make_shared<Texture>(Texture::TEX_2D);
+    m_colorTex->SetImage2D(GetWidth(), GetHeight(), nullptr);
+    m_colorTex->SetFiltering(Texture::NEAREST, Texture::NEAREST);
+    m_fb2.Attach(FrameBuffer::COLOR0, m_colorTex);
+
     FrameBuffer::RestoreDefault();
     m_invertProg = m_loader.LoadProgram("invert.glsl");
     m_invertProg->Use();
     m_texSampler = m_invertProg->GetUniform("tex");
     m_invertProg->GetUniform("uStep").Set(1.0f / GetWidth());
     m_invertProg->GetUniform("vStep").Set(1.0f / GetHeight());
+
+    m_loader.FinishLoading();
 }
 
 void UVSWindow::UpdateLoop()
@@ -75,6 +74,8 @@ void UVSWindow::Render(double, float)
 
     m_fb.Bind();
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     m_fb.SetClearColor(glm::vec4(0.5f, 0.5f, 1.0f, 1.0f));
     assert(m_fb.IsComplete());
     m_fb.Clear();
@@ -83,10 +84,16 @@ void UVSWindow::Render(double, float)
     m_program->Use();
     m_f16->Draw(m_program, m_renderingUniforms);
     glDisable(GL_BLEND);
+    m_fb.Bind(FrameBuffer::READ);
+
+    m_fb2.Bind(FrameBuffer::DRAW);
+    m_fb2.SetClearColor( { 1, 0, 0, 1 });
+    m_fb2.Clear();
+    FrameBuffer::Blit(0, 0, GetWidth(), GetHeight(), 0, 0, GetWidth(), GetHeight());
 
     FrameBuffer fb(true);
     glDisable(GL_DEPTH_TEST);
-    fb.Bind(FrameBuffer::DRAW);
+    fb.Bind();
     fb.SetClearColor( { 0.5f, 0.4f, 0.3f, 1 } );
     fb.Clear();
     m_invertProg->Use();
@@ -95,11 +102,11 @@ void UVSWindow::Render(double, float)
 
     auto end = high_resolution_clock::now();
 
-    totalTime += duration_cast<microseconds>(end - start).count() * 0.001f;
+    totalTime += duration_cast<microseconds>(end - start).count();
     count++;
-    if (count == 10) {
+    if (count == 100) {
         float average = totalTime / count;
-        // Log(INFO, "Average frame time: %.3f", average);
+        Log(INFO, "Average frame time: %.3f milliseconds.", average * 0.001f);
         count = 0;
         totalTime = 0;
     }

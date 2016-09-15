@@ -11,6 +11,7 @@ Texture::Texture(Target target) :
 {
     glGenTextures(1, &m_ID);
     assert(m_ID > 0);
+    SetFiltering(LINEAR, LINEAR);
 }
 
 Texture::~Texture()

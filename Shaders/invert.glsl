@@ -21,39 +21,37 @@ uniform float uStep;
 uniform float vStep;
 
 void main() {
-    float offset = uStep + vStep;
-    offset *= 0.5f;
     vec2 offsets[9] = vec2[](
-    vec2(-offset, offset), // top-left
-    vec2(0.0f,
-    offset), // top-center
-    vec2(offset, offset), // top-right
-    vec2(-offset, 0.0f),
-    // center-left
-    vec2(0.0f,
-    0.0f),
-    // center-center
-    vec2(offset, 0.0f),
-    // center-right
-    vec2(-offset, -offset), // bottom-left
-    vec2(0.0f,
-    -offset), // bottom-center
-    vec2(offset, -offset) // bottom-right
+        vec2(-uStep, vStep), // top-left
+        vec2(0.0f, vStep), // top-center
+        vec2(uStep, vStep), // top-right
+        vec2(-uStep, 0.0f), // center-left
+        vec2(0.0f, 0.0f), // center-center
+        vec2(uStep, 0.0f), // center-right
+        vec2(-uStep, -vStep), // bottom-left
+        vec2(0.0f, -vStep), // bottom-center
+        vec2(uStep, -vStep) // bottom-right
     );
 
 	float kernel[9] = float[](
-		-1, -1, -1,
-		-1, 9, -1,
-		-1, -1, -1
+		1, 2, 1,
+		2, -11, 2,
+		1, 2, 1
 	);
 
 	for (int i = 0; i < 9; i++) {
 		color += kernel[i] * texture2D(tex, UV + offsets[i]);
 	}
-	color = 1.0 - color;
-	color.g = color.r + color.g + color.b;
-	color.g *= 0.33f;
-	color.r = 0;
-	color.b = 0;
+
+	if (gl_FragCoord.x < 590) {
+		color.g += color.r + color.b;
+		color.g *= 0.33f;
+		color.g = 1 - color.g;
+		color.r = color.g;
+		color.b = color.g;
+	} else {
+		color = texture2D(tex, UV);
+	}
+
 	color.a = 1.0f;
 }

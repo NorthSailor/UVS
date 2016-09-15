@@ -27,7 +27,7 @@ in VS_OUT {
 } fs_in;
 
 out vec4 color;
-vec3 lightDir = vec3(6, -20, -0.5);
+vec3 lightDir = vec3(-6, -20, -0.5);
 
 void main() {
     vec4 diffuse = texture2D(diffuseSampler, fs_in.UV);
