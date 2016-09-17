@@ -27,11 +27,11 @@ void UVSWindow::Initialize()
     m_renderingUniforms.transform = m_program->GetUniform("ModelTransform");
     m_renderingUniforms.diffuseSampler = m_program->GetUniform("diffuseSampler");
 
-    glm::mat4 view = glm::lookAt(glm::vec3(2, 12, 2),
+    glm::mat4 view = glm::lookAt(glm::vec3(12, 22, 2),
                                  glm::vec3(0, 0, -1),
                                  glm::vec3(0, 0, 1));
     glm::mat4 projection = glm::perspective(glm::radians(45.0f),
-                                            1.5f, 1.0f, 10000.0f);
+                                            1.5f, 1.0f, 100000000.0f);
 
     m_program->GetUniform("ViewProjection").Set(projection * view);
 

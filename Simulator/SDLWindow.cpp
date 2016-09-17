@@ -4,6 +4,7 @@
 #include <FV/Log.h>
 #include <chrono>
 #include <thread>
+#include <assert.h>
 using namespace std;
 using namespace std::chrono;
 using namespace FV;
@@ -35,6 +36,13 @@ SDLWindow::SDLWindow(std::string title, bool fullscreen) :
 
     if (glGetError() == GL_INVALID_ENUM)
         Log(WARNING, "OpenGL sent INVALID_ENUM.");
+
+    if (GLEW_ARB_clip_control) {
+        glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
+    } else {
+        Log(WARNING, "\"ARB_clip_control\" extension not supported."
+                     " Depth testing may fail.");
+    }
 
     glEnable(GL_DEPTH_TEST);
 }
