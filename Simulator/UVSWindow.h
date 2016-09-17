@@ -27,7 +27,7 @@ protected:
 
     FV::FrameBuffer m_fb;
     FV::FrameBuffer::RenderBuffer m_colorBuffer;
-    FV::FrameBuffer::RenderBuffer m_depthStencilBuffer;
+    FV::FrameBuffer::RenderBuffer m_depthBuffer;
 
     FV::FrameBuffer m_fb2;
     std::shared_ptr<FV::Texture> m_colorTex;

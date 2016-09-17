@@ -39,9 +39,9 @@ void UVSWindow::Initialize()
     m_colorBuffer.Bind();
     m_colorBuffer.SetStorageMultisample(GetWidth(), GetHeight(), 8, Texture::RGBA);
     m_fb.Attach(FrameBuffer::COLOR0, m_colorBuffer);
-    m_depthStencilBuffer.Bind();
-    m_depthStencilBuffer.SetStorageMultisample(GetWidth(), GetHeight(), 8, Texture::DEPTH24_STENCIL8);
-    m_fb.Attach(FrameBuffer::DEPTH_STENCIL, m_depthStencilBuffer);
+    m_depthBuffer.Bind();
+    m_depthBuffer.SetStorageMultisample(GetWidth(), GetHeight(), 8, Texture::DEPTH32F);
+    m_fb.Attach(FrameBuffer::DEPTH, m_depthBuffer);
 
     m_fb2.Bind();
     m_colorTex = make_shared<Texture>(Texture::TEX_2D);
