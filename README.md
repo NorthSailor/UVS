@@ -8,6 +8,9 @@ At this point, UVS is in pre-alpha stage. This means that it is more of a develo
 
 ## Building
 Building should be fairly straightforward. Install the SDL development libraries and OpenGL and you're all set.
+To generate the documentation you need to have doxygen and dot installed. 
+On an Ubuntu system, you need to install the `doxygen` and `graphviz` packages.
+Should these packages be installed, you only need to type `doxygen` at the root of the source tree.
 
 ## Running
 It is essential that you have the assets in place and also that you run UVS from the root of the source tree.

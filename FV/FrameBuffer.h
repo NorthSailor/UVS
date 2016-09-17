@@ -151,8 +151,8 @@ public:
     void Attach(Attachment a, const RenderBuffer &rb);
 
     /**
-     * Blits the whole framebuffer bound as READ to the framebuffer bound as
-     * DRAW.
+     * Blits from the framebuffer bound as FrameBuffer::READ to the framebuffer
+     * bound as FrameBuffer::DRAW.
      */
     static void Blit(int x1, int y1, int w1, int h1,
                      int x2, int y2, int w2, int h2,

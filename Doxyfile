@@ -98,7 +98,7 @@ OUTPUT_LANGUAGE        = English
 # documentation (similar to Javadoc). Set to NO to disable this.
 # The default value is: YES.
 
-BRIEF_MEMBER_DESC      = YES
+BRIEF_MEMBER_DESC      = NO
 
 # If the REPEAT_BRIEF tag is set to YES, doxygen will prepend the brief
 # description of a member or function before the detailed description
@@ -161,7 +161,7 @@ STRIP_FROM_PATH        =
 # specify the list of include paths that are normally passed to the compiler
 # using the -I flag.
 
-STRIP_FROM_INC_PATH    = ./FV
+STRIP_FROM_INC_PATH    = FV 3rdParty 3rdParty/assimp/include 3rdParty/glm
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter (but
 # less readable) file names. This can be useful is your file systems doesn't
