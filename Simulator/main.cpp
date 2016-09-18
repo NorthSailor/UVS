@@ -2,16 +2,16 @@
 #include <SDL2/SDL.h>
 #include <FV/Log.h>
 #include <FV/Exception.h>
-#include <PlanetScape/SpacePosition.h>
+#include <PlanetScape/Quad.h>
 namespace PS = PlanetScape;
 using namespace FV;
 
 int real_main(int, char **)
 {
-    PS::SpacePosition pos = glm::vec3(-640.640, 6640.66, 4600.35);
-    glm::dvec3 doublePos = pos;
-    Log(INFO, "Magnitude: %f", doublePos.x);
-    Log(INFO, "A space position is specified with %d bytes.", sizeof(PS::SpacePosition));
+    std::shared_ptr<PS::Quad> root = std::make_shared<PS::Quad>();
+    assert(root->IsLeaf());
+    root->Subdivide();
+    assert(!root->IsLeaf());
 
     /* if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         Log(ERROR, "Failed to initialize SDL.");

@@ -35,7 +35,7 @@ public:
 
     //!
     //! Creates a new space position object from a given GLM vector.
-    //! \param v The vector to use.
+    //! \param v The vector to use (components in meters).
     //!
     template <typename T>
     inline SpacePosition(const glm::tvec3<T> &v) :

@@ -30,3 +30,5 @@ Simulator/UVSWindow.cpp
 Simulator/UVSWindow.h
 PlanetScape/SpacePosition.h
 PlanetScape/SpacePosition.cpp
+PlanetScape/Quad.h
+PlanetScape/Quad.cpp
