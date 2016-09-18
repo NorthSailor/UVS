@@ -17,10 +17,6 @@ typedef signed long long UniverseComponent;
 //! only used for storage and simple operations like addition and subtraction.
 //! Physics calculations will most probably fail unless specifically tailored
 //! for fixed-point arithmetic.
-//! The position is specified by two vectors. The first one has long integer
-//! components, measuring distances from the origin in kilometers (global).
-//! The second has 32-bit floating point components and specifies the precise
-//! position in meters (local).
 //! Although generally, the position is relative to the Sun, subsquent
 //! operations may yield vectors relative to e.g. a planet's center.
 //!
