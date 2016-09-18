@@ -4,7 +4,7 @@ project "Simulator"
 	language "C++"
 	includedirs { "..",
 		      "../3rdParty/glm" }
-	links { "FrameView", "assimp", "GL", "GLEW", "SDL2", "pthread" }
+	links { "PlanetScape", "FrameView", "assimp", "GL", "GLEW", "SDL2", "pthread" }
 	targetname "UVS"
 	files {
 		"*.cpp",

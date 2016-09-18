@@ -28,3 +28,5 @@ Simulator/SDLWindow.cpp
 Simulator/SDLWindow.h
 Simulator/UVSWindow.cpp
 Simulator/UVSWindow.h
+PlanetScape/SpacePosition.h
+PlanetScape/SpacePosition.cpp

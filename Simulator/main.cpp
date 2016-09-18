@@ -2,16 +2,18 @@
 #include <SDL2/SDL.h>
 #include <FV/Log.h>
 #include <FV/Exception.h>
-#include <FV/Program.h>
-#include <FV/Buffer.h>
-#include <FV/VertexArray.h>
-#include <FV/Texture.h>
-#include <FV/ObjectLoader.h>
+#include <PlanetScape/SpacePosition.h>
+namespace PS = PlanetScape;
 using namespace FV;
 
 int real_main(int, char **)
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+    PS::SpacePosition pos = glm::vec3(-640.640, 6640.66, 4600.35);
+    glm::dvec3 doublePos = pos;
+    Log(INFO, "Magnitude: %f", doublePos.x);
+    Log(INFO, "A space position is specified with %d bytes.", sizeof(PS::SpacePosition));
+
+    /* if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         Log(ERROR, "Failed to initialize SDL.");
         Log(INFO, "Note that UVS needs a window system to run.");
         return 1;
@@ -28,7 +30,7 @@ int real_main(int, char **)
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
 
     UVSWindow window(false);
-    window.Show();
+    window.Show(); */
 
     return 0;
 }
