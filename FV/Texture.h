@@ -121,9 +121,10 @@ public:
 
     /**
      * Creates a new texture object of the given type.
-     * @param target
+     * @param target The target at which the texture should be bound.
      */
     Texture(Target target = TEX_2D);
+
     /**
      * Destroyes the underlying GL object.
      */
@@ -146,12 +147,12 @@ public:
     //! @note The texture must be bound with Bind().
     void GenerateMipmaps() const;
 
-    /** Gets the underlying OpenGL ID. */
+    /** Returns the underlying OpenGL ID. */
     inline GLuint GetID() const {
         return m_ID;
     }
 
-    //! Gets the texture's target.
+    //! Returns the texture's target.
     inline Target GetTarget() const {
         return m_target;
     }

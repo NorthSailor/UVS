@@ -103,7 +103,7 @@ void Buffer<T>::Bind() const
 template <typename T>
 void Buffer<T>::SetData(T *pData, int count)
 {
-    /// @note For OpenGL 4.5+ we should use glNamedBufferData() instead.
+    /// @todo For OpenGL 4.5+ we should use glNamedBufferData() instead.
     glBufferData(static_cast<GLenum>(m_type), count * sizeof(T),
                  static_cast<void*>(pData),
                  static_cast<GLenum>(m_usage));
