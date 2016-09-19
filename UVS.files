@@ -20,7 +20,7 @@ FV/Texture.cpp
 FV/Texture.h
 FV/VertexArray.cpp
 FV/VertexArray.h
-Shaders/invert.glsl
+Shaders/post.glsl
 Shaders/model.glsl
 Shaders/simple.glsl
 Simulator/main.cpp
@@ -32,3 +32,6 @@ PlanetScape/SpacePosition.h
 PlanetScape/SpacePosition.cpp
 PlanetScape/Quad.h
 PlanetScape/Quad.cpp
+PlanetScape/TerrainQuad.h
+PlanetScape/TerrainQuad.cpp
+Shaders/PlanetScape/terrain.glsl

@@ -5,6 +5,8 @@
 #include <chrono>
 #include <thread>
 #include <assert.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl_gl3.h>
 using namespace std;
 using namespace std::chrono;
 using namespace FV;
@@ -29,6 +31,7 @@ SDLWindow::SDLWindow(std::string title, bool fullscreen) :
     SDL_SetWindowFullscreen(m_window,
                             (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
 
+
     glewExperimental = GL_TRUE;
     GLenum error = glewInit();
     if (error != GLEW_OK)
@@ -44,7 +47,13 @@ SDLWindow::SDLWindow(std::string title, bool fullscreen) :
                      " Depth testing may fail.");
     }
 
-    glEnable(GL_DEPTH_TEST);
+    if (!ImGui_ImplSdlGL3_Init(m_window))
+        throw Exception("Failed to initialize ImGui.");
+}
+
+SDLWindow::~SDLWindow()
+{
+    ImGui_ImplSdlGL3_Shutdown();
 }
 
 void SDLWindow::Initialize()
@@ -54,14 +63,19 @@ void SDLWindow::Initialize()
 
 void SDLWindow::Show()
 {
+    // In case the window went fullscreen.
+    SDL_GetWindowSize(m_window, &m_width, &m_height);
     Initialize();
+
+    glViewport(0, 0, GetWidth(), GetHeight());
+
     thread updateThread(&SDLWindow::UpdateLoop, this);
     SDL_Event e;
     SDL_GL_SetSwapInterval(1); // Enable VSync
 
     while (m_shouldQuit == false) {
         while (SDL_PollEvent(&e) != 0) {
-           HandleSDLEvent(&e);
+            HandleSDLEvent(&e);
         }
         static auto lastTick = steady_clock::now();
         static auto firstTick = lastTick;
@@ -69,8 +83,13 @@ void SDLWindow::Show()
         auto currentTick = steady_clock::now();
         auto frameTime = duration_cast<milliseconds>(currentTick - lastTick);
         auto gameTime = duration_cast<milliseconds>(currentTick - firstTick);
+
+        ImGui_ImplSdlGL3_NewFrame(m_window);
+
         Render((double)(0.001 * gameTime.count()),
                (float)(0.001f * frameTime.count()));
+
+        ImGui::Render();
 
         lastTick = currentTick;
         SDL_GL_SwapWindow(m_window);
@@ -89,6 +108,7 @@ void SDLWindow::HandleSDLEvent(SDL_Event *e)
         m_shouldQuit = true;
         break;
     }
+    ImGui_ImplSdlGL3_ProcessEvent(e);
 }
 
 void SDLWindow::Render(double, float)

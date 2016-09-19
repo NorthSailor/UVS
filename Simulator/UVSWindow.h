@@ -6,21 +6,21 @@
 #include <FV/Model.h>
 #include <FV/FrameBuffer.h>
 #include <FV/Texture.h>
+#include <PlanetScape/TerrainQuad.h>
 
 class UVSWindow : public SDLWindow
 {
 public:
     UVSWindow(bool fullscreen = false);
+    ~UVSWindow();
 
 protected:
     virtual void UpdateLoop();
     virtual void Initialize();
     virtual void Render(double t, float dt);
+    virtual void HandleSDLEvent(SDL_Event *e);
 
-    std::shared_ptr<FV::Model> m_f16;
-    FV::Model::RenderingUniforms m_renderingUniforms;
-    std::shared_ptr<FV::Program> m_program;
-    std::shared_ptr<FV::Program> m_invertProg;
+    std::shared_ptr<FV::Program> m_postProg;
     FV::Program::Uniform m_texSampler;
 
     FV::ObjectLoader m_loader;
@@ -31,6 +31,8 @@ protected:
 
     FV::FrameBuffer m_fb2;
     std::shared_ptr<FV::Texture> m_colorTex;
+
+    std::shared_ptr<FV::Program> m_terrainProg;
 };
 
 #endif // UVSWINDOW_H

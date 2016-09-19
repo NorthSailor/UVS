@@ -12,6 +12,7 @@ if os.execute("clang -v") == 0 then
 end
 
 include "FV"
+include "3rdParty/imgui"
 include "PlanetScape"
 include "Simulator"
 

@@ -8,12 +8,7 @@ using namespace FV;
 
 int real_main(int, char **)
 {
-    std::shared_ptr<PS::Quad> root = std::make_shared<PS::Quad>();
-    assert(root->IsLeaf());
-    root->Subdivide();
-    assert(!root->IsLeaf());
-
-    /* if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         Log(ERROR, "Failed to initialize SDL.");
         Log(INFO, "Note that UVS needs a window system to run.");
         return 1;
@@ -29,8 +24,8 @@ int real_main(int, char **)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
 
-    UVSWindow window(false);
-    window.Show(); */
+    UVSWindow window(true);
+    window.Show();
 
     return 0;
 }
