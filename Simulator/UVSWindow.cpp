@@ -10,6 +10,7 @@
 using namespace std;
 using namespace FV;
 using namespace glm;
+namespace PS = PlanetScape;
 using namespace std::chrono;
 using namespace std::this_thread;
 
@@ -55,6 +56,19 @@ void UVSWindow::Initialize()
 
     PlanetScape::TerrainQuad::CreateTileMesh();
 
+    auto printLambda = [] (shared_ptr<PS::TerrainQuad> q) {
+        Log(INFO, "Got a quad that is a leaf: %d! - %d", q->IsLeaf());
+    };
+
+    m_rootQuad = make_shared<PS::TerrainQuad>();
+    assert(m_rootQuad->IsLeaf());
+    m_rootQuad->Parse(printLambda);
+    Log(INFO, "---------");
+    m_rootQuad->Subdivide();
+    m_rootQuad->GetNE()->Subdivide();
+    assert(!m_rootQuad->IsLeaf());
+    m_rootQuad->Parse(printLambda);
+
     m_loader.FinishLoading();
 }
 
@@ -75,8 +89,13 @@ void UVSWindow::Render(double, float)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     static bool drawWireframe = false;
-    ImGui::Checkbox("Wireframe", &drawWireframe);
     if (drawWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    static bool depthTest = true;
+    if (depthTest)
+        glEnable(GL_DEPTH_TEST);
+    else
+        glDisable(GL_DEPTH_TEST);
     m_terrainProg->Use();
     PlanetScape::TerrainQuad::RenderTile();
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -93,7 +112,29 @@ void UVSWindow::Render(double, float)
     m_texSampler.Set(m_colorTex, 0);
     fb.DrawQuad();
 
-    ImGui::Text("Average %.1f FPS (%.2f ms)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+    static bool showFPS = true;
+
+    if (showFPS) {
+        ImGui::Begin("Performance");
+        ImGui::Text("Average %.1f FPS (%.2f ms)", ImGui::GetIO().Framerate,
+                1000.0f / ImGui::GetIO().Framerate);
+        ImGui::End();
+    }
+
+    if (ImGui::BeginMainMenuBar()) {
+        if (ImGui::BeginMenu("Simulator")) {
+            ImGui::MenuItem("Show performance", nullptr, &showFPS);
+            ImGui::Separator();
+            ImGui::MenuItem("Quit", "Alt + F4", &m_shouldQuit);
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Display")) {
+            ImGui::MenuItem("Draw wireframe", nullptr, &drawWireframe);
+            ImGui::MenuItem("Test depth", nullptr, &depthTest);
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
     FrameBuffer::RestoreDefault();
 
     assert(glGetError() == 0);

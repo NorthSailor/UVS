@@ -31,7 +31,6 @@ SDLWindow::SDLWindow(std::string title, bool fullscreen) :
     SDL_SetWindowFullscreen(m_window,
                             (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
 
-
     glewExperimental = GL_TRUE;
     GLenum error = glewInit();
     if (error != GLEW_OK)

@@ -6,7 +6,8 @@ using namespace glm;
 
 shared_ptr<Mesh<vec2>> TerrainQuad::s_quadMesh;
 
-TerrainQuad::TerrainQuad()
+TerrainQuad::TerrainQuad(std::shared_ptr<Quad> parent) :
+    Quad(parent)
 {
 }
 
@@ -52,4 +53,41 @@ void TerrainQuad::RenderTile()
     s_quadMesh->VAO.Bind();
     glDrawElements(GL_TRIANGLES, s_quadMesh->indexCount,
                    GL_UNSIGNED_INT, (void*)0);
+}
+
+void TerrainQuad::Subdivide()
+{
+    float new_scale = m_scale * 0.5f;
+    float f = new_scale * 0.5f;
+
+    auto ne = make_shared<TerrainQuad>(shared_from_this());
+    ne->m_center = m_center + f * vec2(1.0f, 1.0f);
+    ne->m_scale = new_scale;
+    m_children[NE] = ne;
+
+    auto nw = make_shared<TerrainQuad>(shared_from_this());
+    nw->m_center = m_center + f * vec2(-1.0f, 1.0f);
+    nw->m_scale = new_scale;
+    m_children[NW] = nw;
+
+    auto se = make_shared<TerrainQuad>(shared_from_this());
+    se->m_center = m_center + f * vec2(1.0f, -1.0f);
+    se->m_scale = new_scale;
+    m_children[SE] = se;
+
+    auto sw = make_shared<TerrainQuad>(shared_from_this());
+    sw->m_center = m_center + f * vec2(-1.0f, -1.0f);
+    sw->m_scale = new_scale;
+    m_children[SW] = sw;
+}
+
+void TerrainQuad::Parse(TerrainCallback callback)
+{
+    if (!IsLeaf()) {
+        for (auto tquad : m_children) {
+            dynamic_pointer_cast<TerrainQuad>(tquad)->Parse(callback);
+        }
+    } else {
+        callback(dynamic_pointer_cast<TerrainQuad>(shared_from_this()));
+    }
 }

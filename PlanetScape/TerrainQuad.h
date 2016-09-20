@@ -3,6 +3,7 @@
 
 #include "Quad.h"
 #include <FV/Mesh.h>
+#include <functional>
 
 namespace PlanetScape
 {
@@ -13,7 +14,7 @@ namespace PlanetScape
 class TerrainQuad : public Quad
 {
 public:
-    TerrainQuad();
+    TerrainQuad(std::shared_ptr<Quad> parent = nullptr);
 
     //! \brief The tile mesh, rendered for each terrain tile.
     static std::shared_ptr<FV::Mesh<glm::vec2>> s_quadMesh;
@@ -26,6 +27,24 @@ public:
 
     //! The number of quads on a tile's edge.
     static constexpr int TILE_SIZE = 32;
+
+    //! Subdivides the terrain quad.
+    virtual void Subdivide();
+
+    typedef std::function<void(std::shared_ptr<TerrainQuad>)> TerrainCallback;
+
+    //!
+    //! Recursively parses the terrain quadtree, calling the callback for each
+    //! tile.
+    //! \param callback The callback to call.
+    //!
+    virtual void Parse(TerrainCallback callback);
+
+protected:
+    friend class TerrainQuad;
+
+    glm::vec2 m_center;
+    float m_scale = 1.0f;
 };
 
 }

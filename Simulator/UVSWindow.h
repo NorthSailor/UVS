@@ -33,6 +33,7 @@ protected:
     std::shared_ptr<FV::Texture> m_colorTex;
 
     std::shared_ptr<FV::Program> m_terrainProg;
+    std::shared_ptr<PlanetScape::TerrainQuad> m_rootQuad;
 };
 
 #endif // UVSWINDOW_H
