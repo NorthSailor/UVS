@@ -26,7 +26,7 @@ public:
     static void RenderTile();
 
     //! The number of quads on a tile's edge.
-    static constexpr int TILE_SIZE = 32;
+    static constexpr int TILE_SIZE = 24;
 
     //! Subdivides the terrain quad.
     virtual void Subdivide();
@@ -39,6 +39,16 @@ public:
     //! \param callback The callback to call.
     //!
     virtual void Parse(TerrainCallback callback);
+
+    //! Returns the center of the quad.
+    inline glm::vec2 GetCenter() const {
+        return m_center;
+    }
+
+    //! Returns the scale of the quad.
+    inline float GetScale() const {
+        return m_scale;
+    }
 
 protected:
     friend class TerrainQuad;

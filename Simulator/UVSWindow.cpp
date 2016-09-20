@@ -49,25 +49,19 @@ void UVSWindow::Initialize()
     // m_postProg->GetUniform("vStep").Set(1.0f / GetHeight());
 
     m_terrainProg = m_loader.LoadProgram("PlanetScape/terrain.glsl");
-    glm::mat4 transform = glm::lookAt(vec3(30, 10, 10), vec3(), vec3(0, 0, 1));
-    glm::mat4 proj = glm::perspectiveFov(45.0f, (float)GetWidth(), (float)GetHeight(), 1.0f, 1000000.0f);
+    m_camera = glm::lookAt(vec3(12, 7, 10), vec3(), vec3(0, 0, 1));
+    m_projection = glm::perspectiveFov(45.0f,
+        (float)GetWidth(), (float)GetHeight(), 1.0f, 1000000.0f);
     m_terrainProg->Use();
-    m_terrainProg->GetUniform("transform").Set(proj * transform);
+    m_uTransform = m_terrainProg->GetUniform("transform");
 
     PlanetScape::TerrainQuad::CreateTileMesh();
 
-    auto printLambda = [] (shared_ptr<PS::TerrainQuad> q) {
-        Log(INFO, "Got a quad that is a leaf: %d! - %d", q->IsLeaf());
-    };
-
     m_rootQuad = make_shared<PS::TerrainQuad>();
-    assert(m_rootQuad->IsLeaf());
-    m_rootQuad->Parse(printLambda);
-    Log(INFO, "---------");
     m_rootQuad->Subdivide();
     m_rootQuad->GetNE()->Subdivide();
-    assert(!m_rootQuad->IsLeaf());
-    m_rootQuad->Parse(printLambda);
+    m_rootQuad->GetNE()->GetSW()->Subdivide();
+    m_rootQuad->GetNE()->GetSW()->GetSE()->Subdivide();
 
     m_loader.FinishLoading();
 }
@@ -88,7 +82,7 @@ void UVSWindow::Render(double, float)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    static bool drawWireframe = false;
+    static bool drawWireframe = true;
     if (drawWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     static bool depthTest = true;
@@ -97,7 +91,17 @@ void UVSWindow::Render(double, float)
     else
         glDisable(GL_DEPTH_TEST);
     m_terrainProg->Use();
-    PlanetScape::TerrainQuad::RenderTile();
+
+    // Render the terrain
+    auto renderTileCallback = [this] (shared_ptr<PS::TerrainQuad> quad) {
+        vec3 center = vec3(quad->GetCenter().x, quad->GetCenter().y, quad->GetScale() * 5.0f);
+        mat4 scale = glm::scale(mat4(), vec3(quad->GetScale() * 1.01f, quad->GetScale() * 1.01f, 1.0f));
+        mat4 translate = glm::translate(mat4(), center);
+        m_uTransform.Set(m_projection * m_camera * translate * scale);
+        PS::TerrainQuad::RenderTile();
+    };
+    m_rootQuad->Parse(renderTileCallback);
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDisable(GL_BLEND);
     m_fb.Bind(FrameBuffer::READ);

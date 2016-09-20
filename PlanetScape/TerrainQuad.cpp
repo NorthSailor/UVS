@@ -58,7 +58,7 @@ void TerrainQuad::RenderTile()
 void TerrainQuad::Subdivide()
 {
     float new_scale = m_scale * 0.5f;
-    float f = new_scale * 0.5f;
+    float f = TILE_SIZE * 0.25f * m_scale;
 
     auto ne = make_shared<TerrainQuad>(shared_from_this());
     ne->m_center = m_center + f * vec2(1.0f, 1.0f);
