@@ -30,7 +30,7 @@ out vec4 color;
 vec3 lightDir = vec3(-6, -20, -0.5);
 
 void main() {
-    vec4 diffuse = texture2D(diffuseSampler, fs_in.UV);
+    vec4 diffuse = texture(diffuseSampler, fs_in.UV);
     vec3 nLightDir = normalize(lightDir);
     float intensity = 2 * clamp(-(dot(fs_in.normal, nLightDir)), 0.0f, 1.0f);
     vec4 ambient = 0.2 * vec4(1, 0.4, 0.4, 1) * diffuse;

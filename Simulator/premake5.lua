@@ -17,6 +17,6 @@ project "Simulator"
 	targetname "UVS"
 	files {
 		"*.cpp",
-		"*.h"
+		"*.h",
+		"../Shaders/**.glsl"
 	}
-
