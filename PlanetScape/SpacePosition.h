@@ -29,9 +29,9 @@ public:
     //! \param y The y coordinate in millimeters.
     //! \param z The z coordinate in millimeters.
     //!
-    SpacePosition(UniverseComponent x,
-                  UniverseComponent y,
-                  UniverseComponent z);
+    SpacePosition(UniverseComponent x = 0,
+                  UniverseComponent y = 0,
+                  UniverseComponent z = 0);
 
     //!
     //! Creates a new space position object from a given GLM vector.

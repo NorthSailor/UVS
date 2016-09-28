@@ -40,13 +40,13 @@ shared_ptr<ModelMesh> FV::parse_mesh_from_assimp(aiMesh *aimesh)
     shared_ptr<ModelMesh> mesh = make_shared<ModelMesh>();
     mesh->VAO.Bind();
     mesh->vertexBuffer.Bind();
-    mesh->vertexBuffer.SetData(vertices.data(), vertices.size());
+    mesh->vertexBuffer.SetData(vertices.data(), (int)vertices.size());
     mesh->vertexBuffer.SetAttribPointer(0, 3, offsetof(Pos3N3UV2, position));
     mesh->vertexBuffer.SetAttribPointer(1, 3, offsetof(Pos3N3UV2, normal));
     mesh->vertexBuffer.SetAttribPointer(2, 2, offsetof(Pos3N3UV2, UV));
     mesh->indexBuffer.Bind();
-    mesh->indexBuffer.SetData(indices.data(), indices.size());
-    mesh->indexCount = indices.size();
+    mesh->indexBuffer.SetData(indices.data(), (int)indices.size());
+    mesh->indexCount = (int)indices.size();
     return mesh;
 }
 

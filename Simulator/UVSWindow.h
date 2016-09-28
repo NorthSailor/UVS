@@ -6,7 +6,7 @@
 #include "FV/Model.h"
 #include "FV/FrameBuffer.h"
 #include "FV/Texture.h"
-#include "PlanetScape/TerrainQuad.h"
+#include "PlanetScape/Planet.h"
 
 class UVSWindow : public SDLWindow
 {
@@ -36,7 +36,8 @@ protected:
     FV::Program::Uniform m_uTransform;
     glm::mat4 m_projection;
     glm::mat4 m_camera;
-    std::shared_ptr<PlanetScape::TerrainQuad> m_rootQuad;
+    
+    PlanetScape::Planet m_earth;
 };
 
 #endif // UVSWINDOW_H

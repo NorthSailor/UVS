@@ -63,7 +63,7 @@ public:
      * @note The buffer must be bound with Bind().
      */
     void SetAttribPointer(GLuint index, int size = 3, size_t offset = 0,
-                          size_t stride = sizeof(T),
+                          int stride = sizeof(T),
                           GLenum type = GL_FLOAT);
 
 protected:
@@ -111,7 +111,7 @@ void Buffer<T>::SetData(T *pData, int count)
 
 template <typename T>
 void Buffer<T>::SetAttribPointer(GLuint index, int size,
-                                 size_t offset, size_t stride,
+                                 size_t offset, int stride,
                                  GLenum type)
 {
     glEnableVertexAttribArray(index);

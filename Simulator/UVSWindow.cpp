@@ -15,7 +15,8 @@ using namespace std::chrono;
 using namespace std::this_thread;
 
 UVSWindow::UVSWindow(bool fullscreen) :
-    SDLWindow("Universal Vehicle Simulator - Pre-alpha", fullscreen)
+    SDLWindow("Universal Vehicle Simulator - Pre-alpha", fullscreen),
+    m_earth(PS::SpacePosition(), 6000.0)
 {
 }
 
@@ -57,12 +58,6 @@ void UVSWindow::Initialize()
 
     PlanetScape::TerrainQuad::CreateTileMesh();
 
-    m_rootQuad = make_shared<PS::TerrainQuad>();
-    m_rootQuad->Subdivide();
-    m_rootQuad->GetNE()->Subdivide();
-    m_rootQuad->GetNE()->GetSW()->Subdivide();
-    m_rootQuad->GetNE()->GetSW()->GetSE()->Subdivide();
-
     m_loader.FinishLoading();
 }
 
@@ -100,7 +95,8 @@ void UVSWindow::Render(double, float)
         m_uTransform.Set(m_projection * m_camera * translate * scale);
         PS::TerrainQuad::RenderTile();
     };
-    m_rootQuad->Parse(renderTileCallback);
+    
+    (void)renderTileCallback;
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDisable(GL_BLEND);
