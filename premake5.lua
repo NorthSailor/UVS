@@ -4,7 +4,6 @@ system "macosx"
 
 workspace "UVS"
 	configurations { "Debug", "Release" }
-	platforms { "macOS", "Linux" }
 	location "Build"
 	
 	filter "system:linux"
@@ -16,7 +15,7 @@ workspace "UVS"
 		buildoptions { "-F /Library/Frameworks",
 		        "-F ~/Library/Frameworks",
 		        "-g -Werror -Wall -Wextra -std=c++14" }
-		linkoptions { "-F/Library/Frameworks" }
+		linkoptions { "-F/Library/Frameworks -L/usr/local/lib" }
 
 	filter { }	
 		sysincludedirs { "/usr/local/include" }
