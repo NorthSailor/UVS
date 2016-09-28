@@ -1,7 +1,7 @@
 #ifndef PS_SPACEPOSITION_H
 #define PS_SPACEPOSITION_H
 
-#include <glm/vec3.hpp>
+#include "glm/vec3.hpp"
 
 namespace PlanetScape {
 

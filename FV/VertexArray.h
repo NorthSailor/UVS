@@ -1,7 +1,7 @@
 #ifndef FV_VERTEXARRAY_H
 #define FV_VERTEXARRAY_H
 
-#include <GL/glew.h>
+#include "OpenGL.h"
 
 namespace FV {
 

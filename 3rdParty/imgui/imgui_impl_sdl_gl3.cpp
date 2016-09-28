@@ -12,7 +12,7 @@
 // SDL,GL3W
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
-#include <GL/glew.h>
+#include "../../FV/OpenGL.h"
 
 // Data
 static double       g_Time = 0.0f;

@@ -7,3 +7,10 @@ project "ImGUI"
 		"*.h"
 	}
 
+	includedirs { ".." }	
+	
+	filter { "system:linux" }
+	    includedirs { "/usr/include/SDL2" }
+	
+
+

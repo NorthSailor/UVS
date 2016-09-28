@@ -1,5 +1,5 @@
 #include "Mesh.h"
-#include "assimp/scene.h"
+#include <assimp/scene.h>
 using namespace FV;
 using namespace std;
 

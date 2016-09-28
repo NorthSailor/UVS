@@ -1,8 +1,8 @@
 #include "UVSWindow.h"
 #include <SDL2/SDL.h>
-#include <FV/Log.h>
-#include <FV/Exception.h>
-#include <PlanetScape/Quad.h>
+#include "FV/Log.h"
+#include "FV/Exception.h"
+#include "PlanetScape/Quad.h"
 namespace PS = PlanetScape;
 using namespace FV;
 

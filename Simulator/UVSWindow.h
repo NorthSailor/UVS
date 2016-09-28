@@ -2,11 +2,11 @@
 #define UVSWINDOW_H
 
 #include "SDLWindow.h"
-#include <FV/ObjectLoader.h>
-#include <FV/Model.h>
-#include <FV/FrameBuffer.h>
-#include <FV/Texture.h>
-#include <PlanetScape/TerrainQuad.h>
+#include "FV/ObjectLoader.h"
+#include "FV/Model.h"
+#include "FV/FrameBuffer.h"
+#include "FV/Texture.h"
+#include "PlanetScape/TerrainQuad.h"
 
 class UVSWindow : public SDLWindow
 {

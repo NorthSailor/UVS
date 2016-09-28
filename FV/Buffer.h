@@ -1,7 +1,7 @@
 #ifndef FV_BUFFER_H
 #define FV_BUFFER_H
 
-#include <GL/glew.h>
+#include "OpenGL.h"
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 

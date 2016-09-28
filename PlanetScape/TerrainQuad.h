@@ -2,7 +2,7 @@
 #define PS_TERRAINQUAD_H
 
 #include "Quad.h"
-#include <FV/Mesh.h>
+#include "FV/Mesh.h"
 #include <functional>
 
 namespace PlanetScape

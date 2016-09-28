@@ -7,4 +7,3 @@ project "PlanetScape"
 		"*.cpp",
 		"*.h"
 	}
-

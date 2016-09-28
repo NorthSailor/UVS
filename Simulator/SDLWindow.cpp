@@ -1,12 +1,12 @@
 #include "SDLWindow.h"
-#include <GL/glew.h>
-#include <FV/Exception.h>
-#include <FV/Log.h>
+#include "FV/OpenGL.h"
+#include "FV/Exception.h"
+#include "FV/Log.h"
 #include <chrono>
 #include <thread>
 #include <assert.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_sdl_gl3.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl_gl3.h"
 using namespace std;
 using namespace std::chrono;
 using namespace FV;
@@ -31,13 +31,11 @@ SDLWindow::SDLWindow(std::string title, bool fullscreen) :
     SDL_SetWindowFullscreen(m_window,
                             (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
 
+#ifndef MACOS
     glewExperimental = GL_TRUE;
     GLenum error = glewInit();
     if (error != GLEW_OK)
         throw Exception("Failed to initialize GLEW ");
-
-    if (glGetError() == GL_INVALID_ENUM)
-        Log(WARNING, "OpenGL sent INVALID_ENUM.");
 
     if (GLEW_ARB_clip_control) {
         glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
@@ -45,6 +43,10 @@ SDLWindow::SDLWindow(std::string title, bool fullscreen) :
         Log(WARNING, "\"ARB_clip_control\" extension not supported."
                      " Depth testing may fail.");
     }
+#endif
+    
+    if (glGetError() == GL_INVALID_ENUM)
+        Log(WARNING, "OpenGL sent INVALID_ENUM.");
 
     if (!ImGui_ImplSdlGL3_Init(m_window))
         throw Exception("Failed to initialize ImGui.");
