@@ -69,7 +69,7 @@ void SDLWindow::Show()
     Initialize();
 
     glViewport(0, 0, GetWidth(), GetHeight());
-
+    
     thread updateThread(&SDLWindow::UpdateLoop, this);
     SDL_Event e;
     SDL_GL_SetSwapInterval(1); // Enable VSync

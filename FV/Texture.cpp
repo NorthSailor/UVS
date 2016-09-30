@@ -98,6 +98,33 @@ void Texture::SetImage2D(int width, int height, void *data, Format iformat,
                  m_format, m_type, m_data);
 }
 
+void Texture::SetCubemapFace(Texture::CubeMapFace face, int width, int height,
+                             void *data, Format iformat, Type type,
+                             Format format, int border)
+{
+    glTexImage2D(face, 0, iformat, width, height, border, format, type, data);
+}
+
+void Texture::LoadCubemap(vector<string> faces)
+{
+    m_final = true;
+    Bind(0);
+    int width, height, components;
+    int face = 0;
+    for (auto it = faces.begin(); it != faces.end(); it++, face += 1) {
+        void *data = stbi_load(("Resources/" + *it).c_str(), &width, &height,
+                               &components, STBI_rgb_alpha);
+        assert(data != nullptr);
+        // Not very elegant but we can't increment an enum in C++!
+        SetCubemapFace(
+            static_cast<CubeMapFace>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face),
+            width, height, data);
+    }
+    
+    SetFiltering(LINEAR, LINEAR);
+    SetWrap(CLAMP_TO_EDGE, CLAMP_TO_EDGE, CLAMP_TO_EDGE);
+}
+
 void Texture::LoadImage2D(std::string filename, Format format)
 {
     assert(m_target == TEX_2D);

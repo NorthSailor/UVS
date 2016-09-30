@@ -6,7 +6,7 @@
 #include "FV/Model.h"
 #include "FV/FrameBuffer.h"
 #include "FV/Texture.h"
-#include "PlanetScape/Planet.h"
+#include "PlanetScape/Universe.h"
 
 class UVSWindow : public SDLWindow
 {
@@ -37,7 +37,7 @@ protected:
     glm::mat4 m_projection;
     glm::mat4 m_camera;
     
-    PlanetScape::Planet m_earth;
+    PlanetScape::Universe m_universe;
 };
 
 #endif // UVSWINDOW_H
