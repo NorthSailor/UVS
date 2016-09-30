@@ -5,14 +5,15 @@
 #include "glm/gtc/quaternion.hpp"
 #include <vector>
 #include <memory>
-#include "FV/Texture.h"
+#include "FV/Framebuffer.h"
+#include "FV/ObjectLoader.h"
 
 namespace PlanetScape {
     class Universe {
     public:
-        Universe();
+        Universe(FV::ObjectLoader &objLoader);
         
-        void SetCameraPos(const SpacePosition& cameraPos) {
+        inline void SetCameraPos(const SpacePosition& cameraPos) {
             m_cameraPos = cameraPos;
         }
         
@@ -20,7 +21,7 @@ namespace PlanetScape {
             return m_cameraPos;
         }
         
-        void SetCameraOrientation(const glm::quat& cameraOrientation) {
+        inline void SetCameraOrientation(const glm::quat& cameraOrientation) {
             m_cameraOrientation = cameraOrientation;
         }
         
@@ -28,14 +29,30 @@ namespace PlanetScape {
             return m_cameraOrientation;
         }
         
+        inline void SetProjectionMatrix(const glm::dmat4& pm) {
+            m_mProjection = pm;
+        }
+        
+        inline const glm::dmat4& GetProjectionMatrix() const {
+            return m_mProjection;
+        }
+        
+        void Render(FV::FrameBuffer &fb);
+        
     protected:
+        FV::ObjectLoader &m_objLoader;
         std::vector<std::shared_ptr<Planet>> m_planets;
         SpacePosition m_cameraPos;
         glm::quat m_cameraOrientation;
+        glm::dmat4 m_mProjection;
         
         std::shared_ptr<FV::Texture> m_skybox;
+        std::shared_ptr<FV::Program> m_progSkybox;
+        FV::Program::Uniform m_umInverseProjection;
+        FV::Program::Uniform m_umInverseCamera;
         
         void LoadSkybox();
+        void DrawSkybox(FV::FrameBuffer &fb);
     };
 }
 

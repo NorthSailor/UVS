@@ -15,7 +15,8 @@ using namespace std::chrono;
 using namespace std::this_thread;
 
 UVSWindow::UVSWindow(bool fullscreen) :
-    SDLWindow("Universal Vehicle Simulator - Pre-alpha", fullscreen)
+    SDLWindow("Universal Vehicle Simulator - Pre-alpha", fullscreen),
+    m_universe(m_loader)
 {
 }
 
@@ -59,6 +60,9 @@ void UVSWindow::Initialize()
     
     m_universe.SetCameraPos(PS::SpacePosition(100000000LL, 0, 0));
     m_universe.SetCameraOrientation(angleAxis(0.0f, vec3(0.0f, 0.0f, 1.0f)));
+    m_universe.SetProjectionMatrix(glm::perspective(45.0, (double)GetWidth(),
+                                                    (double)GetHeight(),
+                                                    1000000000.0));
     
     m_loader.FinishLoading();
 }
@@ -72,14 +76,7 @@ void UVSWindow::UpdateLoop()
 
 void UVSWindow::Render(double, float)
 {
-    m_fb.Bind();
-    glEnable(GL_DEPTH_TEST);
-    m_fb.SetClearColor(vec4(0.1f, 0.1f, 0.05f, 1));
-    m_fb.Clear();
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    static bool drawWireframe = true;
+    static bool drawWireframe = false;
     if (drawWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     static bool depthTest = true;
@@ -88,18 +85,9 @@ void UVSWindow::Render(double, float)
     else
         glDisable(GL_DEPTH_TEST);
     m_terrainProg->Use();
-
-    // Render the terrain
-    auto renderTileCallback = [this] (shared_ptr<PS::TerrainQuad> quad) {
-        vec3 center = vec3(quad->GetCenter().x, quad->GetCenter().y, quad->GetScale() * 5.0f);
-        mat4 scale = glm::scale(mat4(), vec3(quad->GetScale() * 1.01f, quad->GetScale() * 1.01f, 1.0f));
-        mat4 translate = glm::translate(mat4(), center);
-        m_uTransform.Set(m_projection * m_camera * translate * scale);
-        PS::TerrainQuad::RenderTile();
-    };
     
-    (void)renderTileCallback;
-
+    m_universe.Render(m_fb);
+    
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDisable(GL_BLEND);
     m_fb.Bind(FrameBuffer::READ);
