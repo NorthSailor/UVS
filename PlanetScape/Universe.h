@@ -48,8 +48,8 @@ namespace PlanetScape {
         
         std::shared_ptr<FV::Texture> m_skybox;
         std::shared_ptr<FV::Program> m_progSkybox;
-        FV::Program::Uniform m_umInverseProjection;
-        FV::Program::Uniform m_umInverseCamera;
+        FV::Program::Uniform m_umInverseTransform;
+        glm::quat m_qZtoY;
         
         void LoadSkybox();
         void DrawSkybox(FV::FrameBuffer &fb);

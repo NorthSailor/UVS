@@ -49,20 +49,15 @@ void UVSWindow::Initialize()
     // m_postProg->GetUniform("uStep").Set(1.0f / GetWidth());
     // m_postProg->GetUniform("vStep").Set(1.0f / GetHeight());
 
-    m_terrainProg = m_loader.LoadProgram("PlanetScape/terrain.glsl");
-    m_camera = glm::lookAt(vec3(12, 7, 10), vec3(), vec3(0, 0, 1));
-    m_projection = glm::perspectiveFov(45.0f,
-        (float)GetWidth(), (float)GetHeight(), 1.0f, 1000000.0f);
-    m_terrainProg->Use();
-    m_uTransform = m_terrainProg->GetUniform("transform");
-
     PlanetScape::TerrainQuad::CreateTileMesh();
     
     m_universe.SetCameraPos(PS::SpacePosition(100000000LL, 0, 0));
-    m_universe.SetCameraOrientation(angleAxis(0.0f, vec3(0.0f, 0.0f, 1.0f)));
-    m_universe.SetProjectionMatrix(glm::perspective(45.0, (double)GetWidth(),
-                                                    (double)GetHeight(),
-                                                    1000000000.0));
+    m_universe.SetProjectionMatrix(glm::perspectiveFov(radians(90.0),
+                                                       (double)GetWidth(),
+                                                       (double)GetHeight(),
+                                                       1.0, 1000000.0));
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
     
     m_loader.FinishLoading();
 }
@@ -84,7 +79,6 @@ void UVSWindow::Render(double, float)
         glEnable(GL_DEPTH_TEST);
     else
         glDisable(GL_DEPTH_TEST);
-    m_terrainProg->Use();
     
     m_universe.Render(m_fb);
     
@@ -132,5 +126,29 @@ void UVSWindow::Render(double, float)
 
 void UVSWindow::HandleSDLEvent(SDL_Event *e)
 {
-    SDLWindow::HandleSDLEvent(e);
+    switch (e->type) {
+        case SDL_MOUSEMOTION:
+        {
+            if (!SDL_GetRelativeMouseMode())
+                break;
+            int xrel = e->motion.xrel;
+            int yrel = e->motion.yrel;
+            float vrot = -xrel * 0.003f;
+            float hrot = -yrel * 0.003f;
+            quat current = m_universe.GetCameraOrientation();
+            vec3 hAxis = inverse(current) * vec3(1, 0, 0);
+            vec3 vAxis = inverse(current) * vec3(0, 1, 0);
+            current *= angleAxis(vrot, vAxis);
+            current *= angleAxis(hrot, hAxis);
+            m_universe.SetCameraOrientation(current);
+            break;
+        }
+        case SDL_KEYUP:
+            if (e->key.keysym.sym == SDLK_SPACE) {
+                SDL_SetRelativeMouseMode(SDL_GetRelativeMouseMode() ? SDL_FALSE : SDL_TRUE);
+            }
+            break;
+        default:
+            SDLWindow::HandleSDLEvent(e);
+    }
 }

@@ -6,6 +6,9 @@ using namespace glm;
 
 Universe::Universe(ObjectLoader &objLoader) : m_objLoader(objLoader)
 {
+    // Converts from a Z-up coordinate system to a Y-up coordinate system.
+    m_qZtoY = angleAxis(radians(90.0f), vec3(0, 1, 0)) *
+              angleAxis(radians(90.0f), vec3(-1, 0, 0));
     LoadSkybox();
 }
 
@@ -22,24 +25,23 @@ void Universe::LoadSkybox()
     faces.push_back("PlanetScape/Skybox/ZPlus.png");
     faces.push_back("PlanetScape/Skybox/ZMinus.png");
     m_skybox->LoadCubemap(faces);
+    m_skybox->SetFiltering(Texture::LINEAR, Texture::LINEAR);
     
     m_progSkybox = m_objLoader.LoadProgram("PlanetScape/skybox.glsl");
     m_progSkybox->Use();
     m_progSkybox->GetUniform("skybox").Set(m_skybox, 0);
-    // m_umInverseProjection = m_progSkybox->GetUniform("invProjection");
-    m_umInverseCamera = m_progSkybox->GetUniform("invCamera");
+    m_umInverseTransform = m_progSkybox->GetUniform("invTransform");
 }
 
 void Universe::DrawSkybox(FrameBuffer &fb)
 {
-    m_cameraOrientation = glm::angleAxis(90.0f, vec3(1.0f, 0.0f, 0.0f));
-    // Find the inverse matrices.
-    // mat4 invProj = inverse(m_mProjection);
-    //mat4 invCamera = mat4_cast(inverse(m_cameraOrientation));
+    // Find the inverse matrices (yes, it could be cached).
+    mat4 invProjection = inverse(m_mProjection);
+    mat4 invCamera = mat4_cast(inverse(m_cameraOrientation * m_qZtoY));
     m_progSkybox->Use();
-    // m_umInverseProjection.Set(invProj);
-    m_umInverseCamera.Set(glm::mat4());
+    m_umInverseTransform.Set(invCamera * invProjection);
     fb.DrawQuad();
+    fb.Clear(FrameBuffer::DEPTH_BIT);
 }
 
 void Universe::Render(FrameBuffer &fb)
