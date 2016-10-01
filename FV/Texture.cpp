@@ -119,6 +119,7 @@ void Texture::LoadCubemap(vector<string> faces)
         SetCubemapFace(
             static_cast<CubeMapFace>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face),
             width, height, data);
+        free(data);
     }
     
     SetFiltering(LINEAR, LINEAR);
