@@ -57,27 +57,34 @@ void TerrainQuad::RenderTile()
 
 void TerrainQuad::Subdivide()
 {
-    float new_scale = m_scale * 0.5f;
-    float f = TILE_SIZE * 0.25f * m_scale;
-
+    LogicalPosition childPos = {
+        m_logicalPos.face,
+        m_logicalPos.level + 1,
+        m_logicalPos.offset * 2.0
+    };
+    
     auto ne = make_shared<TerrainQuad>(shared_from_this());
-    ne->m_center = m_center + f * vec2(1.0f, 1.0f);
-    ne->m_scale = new_scale;
+    LogicalPosition nePos = childPos;
+    nePos.offset += vec2(0.5f, 0.5f);
+    ne->SetLogicalPosition(nePos);
     m_children[NE] = ne;
 
     auto nw = make_shared<TerrainQuad>(shared_from_this());
-    nw->m_center = m_center + f * vec2(-1.0f, 1.0f);
-    nw->m_scale = new_scale;
+    LogicalPosition nwPos = childPos;
+    nwPos.offset += vec2(-0.5f, 0.5f);
+    nw->SetLogicalPosition(nwPos);
     m_children[NW] = nw;
 
     auto se = make_shared<TerrainQuad>(shared_from_this());
-    se->m_center = m_center + f * vec2(1.0f, -1.0f);
-    se->m_scale = new_scale;
+    LogicalPosition sePos = childPos;
+    sePos.offset += vec2(0.5f, -0.5f);
+    se->SetLogicalPosition(sePos);
     m_children[SE] = se;
 
     auto sw = make_shared<TerrainQuad>(shared_from_this());
-    sw->m_center = m_center + f * vec2(-1.0f, -1.0f);
-    sw->m_scale = new_scale;
+    LogicalPosition swPos = childPos;
+    swPos.offset += vec2(-0.5f, -0.5f);
+    sw->SetLogicalPosition(swPos);
     m_children[SW] = sw;
 }
 

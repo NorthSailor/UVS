@@ -7,7 +7,21 @@
 
 namespace PlanetScape
 {
-
+    enum CubeFace {
+        XPLUS = 0,
+        XMINUS = 1,
+        YPLUS = 2,
+        YMINUS = 3,
+        ZPLUS = 4,
+        ZMINUS = 5
+    };
+    
+    struct LogicalPosition {
+        CubeFace face;
+        int level;
+        glm::dvec2 offset;
+    };
+    
 //!
 //! \brief A quad that contains terrain information (elevation, normals, etc.)
 //!
@@ -40,21 +54,17 @@ public:
     //!
     virtual void Parse(TerrainCallback callback);
 
-    //! Returns the center of the quad.
-    inline glm::vec2 GetCenter() const {
-        return m_center;
+    const LogicalPosition& GetLogicalPosition() const {
+        return m_logicalPos;
     }
-
-    //! Returns the scale of the quad.
-    inline float GetScale() const {
-        return m_scale;
+    
+    void SetLogicalPosition(const LogicalPosition& lpos) {
+        m_logicalPos = lpos;
     }
-
+    
 protected:
     friend class TerrainQuad;
-
-    glm::vec2 m_center;
-    float m_scale = 1.0f;
+    LogicalPosition m_logicalPos;
 };
 
 }

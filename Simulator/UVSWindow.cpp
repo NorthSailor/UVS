@@ -51,7 +51,6 @@ void UVSWindow::Initialize()
 
     PlanetScape::TerrainQuad::CreateTileMesh();
     
-    m_universe.SetCameraPos(PS::SpacePosition(100000000LL, 0, 0));
     m_universe.SetProjectionMatrix(glm::perspectiveFov(radians(90.0),
                                                        (double)GetWidth(),
                                                        (double)GetHeight(),

@@ -53,6 +53,14 @@ public:
     inline operator glm::tvec3<T>() const {
         return glm::tvec3<T>(*this) * static_cast<T>(0.001);
     }
+    
+    inline SpacePosition operator-(const SpacePosition &p2) {
+        return SpacePosition(x - p2.x, y - p2.y, z - p2.z);
+    }
+    
+    inline SpacePosition operator+(const SpacePosition &p2) {
+        return SpacePosition(x + p2.x, y + p2.y, z + p2.z);
+    }
 };
 
 }

@@ -5,7 +5,7 @@
 #include "glm/gtc/quaternion.hpp"
 #include <vector>
 #include <memory>
-#include "FV/Framebuffer.h"
+#include "FV/FrameBuffer.h"
 #include "FV/ObjectLoader.h"
 
 namespace PlanetScape {
@@ -53,6 +53,9 @@ namespace PlanetScape {
         
         void LoadSkybox();
         void DrawSkybox(FV::FrameBuffer &fb);
+        
+        void DrawPlanets(FV::FrameBuffer &fb);
+        void DrawPlanet(FV::FrameBuffer &fb, std::shared_ptr<Planet> planet);
     };
 }
 
