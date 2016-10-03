@@ -24,6 +24,10 @@ namespace PlanetScape {
             return m_radius;
         }
         
+        const std::vector<std::shared_ptr<TerrainQuad>> GetQuads() {
+            return m_quads;
+        }
+        
     protected:
         std::vector<std::shared_ptr<TerrainQuad>> m_quads;
         SpacePosition m_center;

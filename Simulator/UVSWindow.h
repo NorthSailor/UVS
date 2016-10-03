@@ -32,8 +32,6 @@ protected:
     FV::FrameBuffer m_fb2;
     std::shared_ptr<FV::Texture> m_colorTex;
 
-    std::shared_ptr<FV::Program> m_terrainProg;
-    FV::Program::Uniform m_uTransform;
     glm::mat4 m_projection;
     glm::mat4 m_camera;
     

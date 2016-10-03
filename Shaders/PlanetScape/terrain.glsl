@@ -6,8 +6,7 @@ uniform mat4 transform;
 layout (location = 0) in vec2 aPosition;
 
 void main() {
-    vec3 position = vec3(aPosition.x, aPosition.y, sin(0.25f * aPosition.x + aPosition.y) * 0.1f);
-    gl_Position = transform * vec4(position, 1);
+    gl_Position = transform * vec4(aPosition, 0, 1);
 }
 
 #FRAGMENT
