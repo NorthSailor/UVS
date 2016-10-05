@@ -31,8 +31,14 @@ namespace PlanetScape {
         QuadSphere(double radius) : m_radius(radius) { }
         
         template <typename T>
+        inline T GetScalingFactor(int level) const {
+            return (T)(2.0) * (T)m_radius / (T)TerrainQuad::TILE_SIZE / (T)(level + 1);
+        }
+        
+        template <typename T>
         glm::tvec3<T> LogicalToLocal(const LogicalPosition &lp) const {
-            glm::tvec2<T> surface = glm::tvec2<T>(lp.offset) * (T)TerrainQuad::TILE_SIZE / (T)(lp.level + 1);
+            T scalingFactor = 1.0f * m_radius;
+            glm::tvec2<T> surface = glm::tvec2<T>(lp.offset) * scalingFactor;
             switch (lp.face) {
                 case XPLUS:
                     return glm::tvec3<T>(m_radius, surface.x, surface.y);

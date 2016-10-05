@@ -18,8 +18,9 @@ Universe::Universe(ObjectLoader &objLoader) : m_objLoader(objLoader)
     
     // Create a dummy planet.
     SpacePosition earthCenter(149000000000000LL, 0, 0);
-    m_planets.push_back(make_shared<Planet>(earthCenter, 6000.0));
-    m_cameraPos = earthCenter + SpacePosition(5000000000LL, 5000000000LL, 5000000000LL);
+    m_planets.push_back(make_shared<Planet>(earthCenter, 6000000.0));
+    m_cameraPos = earthCenter + SpacePosition(20000000000LL, 000000000LL, 000000000LL);
+    //m_planets[0]->GetQuads()[0]->Subdivide();
 }
 
 void Universe::LoadSkybox()
@@ -77,11 +78,15 @@ void Universe::DrawPlanet(FV::FrameBuffer&, shared_ptr<Planet> planet)
         dvec3 deformed = planet->GetDeformation().DeformLogical<double>(lpos);
         Log(INFO, "Rendering quad (%.3f, %.3f, %.3f).",
             deformed.x, deformed.y, deformed.z);
-        // vec3 localPos = relativePlanetPos - deformed;
-        mat4 transform = rotate(mat4(), radians(0.0f), vec3(1, 0, 0));
-        transform = mat4(inverse(m_mZtoY) * mat4(m_cameraOrientation)) * transform;
-        transform = translate(transform, vec3(0, 0, -10));
-        m_uTransform.Set(mat4(m_mProjection) * m_mZtoY * transform);
+        vec3 localPos = relativePlanetPos - deformed;
+        float scalingFactor = planet->GetDeformation().GetScalingFactor<float>(lpos.level);
+        quat quadRot = rotation(normalize(deformed), dvec3(0, 0, 1));
+        mat4 transform = mat4(m_cameraOrientation) *
+                         translate(mat4(), localPos) *
+                         mat4(quadRot) *
+                         scale(mat4(), vec3(scalingFactor, scalingFactor, 1.0f));
+        
+        m_uTransform.Set(mat4(m_mProjection) * transform);
         TerrainQuad::RenderTile();
     };
     

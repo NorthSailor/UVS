@@ -54,7 +54,7 @@ void UVSWindow::Initialize()
     m_universe.SetProjectionMatrix(glm::perspectiveFov(radians(45.0),
                                                        (double)GetWidth(),
                                                        (double)GetHeight(),
-                                                       1.0, 1000000.0));
+                                                       1.0, 1000000000000000000.0));
     SDL_SetRelativeMouseMode(SDL_TRUE);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
     
@@ -70,7 +70,7 @@ void UVSWindow::UpdateLoop()
 
 void UVSWindow::Render(double, float)
 {
-    static bool drawWireframe = false;
+    static bool drawWireframe = true;
     if (drawWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     static bool depthTest = true;
@@ -78,6 +78,12 @@ void UVSWindow::Render(double, float)
         glEnable(GL_DEPTH_TEST);
     else
         glDisable(GL_DEPTH_TEST);
+    
+    static bool cullFace = false;
+    if (cullFace)
+        glEnable(GL_CULL_FACE);
+    else
+        glDisable(GL_CULL_FACE);
     
     m_universe.Render(m_fb);
     
@@ -114,6 +120,7 @@ void UVSWindow::Render(double, float)
         if (ImGui::BeginMenu("Display")) {
             ImGui::MenuItem("Draw wireframe", nullptr, &drawWireframe);
             ImGui::MenuItem("Test depth", nullptr, &depthTest);
+            ImGui::MenuItem("Face culling", nullptr, &cullFace);
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
