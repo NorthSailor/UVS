@@ -16,7 +16,8 @@ using namespace std::this_thread;
 
 UVSWindow::UVSWindow(bool fullscreen) :
     SDLWindow("Universal Vehicle Simulator - Pre-alpha", fullscreen),
-    m_universe(m_loader)
+    m_universe(m_loader),
+    speed(1.0f)
 {
 }
 
@@ -64,7 +65,13 @@ void UVSWindow::Initialize()
 void UVSWindow::UpdateLoop()
 {
     while (!m_shouldQuit) {
-        sleep_for(milliseconds(50));
+        quat cq = m_universe.GetCameraOrientation();
+        vec3 front = inverse(cq) * vec3(0, 0, speed * 0.005);
+        PS::SpacePosition current = m_universe.GetCameraPos();
+        PS::SpacePosition offset = PS::SpacePosition(front);
+        m_universe.SetCameraPos(current + offset);
+        
+        sleep_for(milliseconds(5));
     }
 }
 
@@ -109,6 +116,10 @@ void UVSWindow::Render(double, float)
                 1000.0f / ImGui::GetIO().Framerate);
         ImGui::End();
     }
+    
+    ImGui::Begin("Position");
+    ImGui::Text("Speed: %.3f km/s", 0.001f * speed);
+    ImGui::End();
 
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("Simulator")) {
@@ -149,11 +160,23 @@ void UVSWindow::HandleSDLEvent(SDL_Event *e)
             m_universe.SetCameraOrientation(current);
             break;
         }
-        case SDL_KEYUP:
-            if (e->key.keysym.sym == SDLK_SPACE) {
-                SDL_SetRelativeMouseMode(SDL_GetRelativeMouseMode() ? SDL_FALSE : SDL_TRUE);
+        case SDL_KEYUP: {
+            switch (e->key.keysym.sym) {
+                case SDLK_UP:
+                    speed *= 10.0f;
+                    break;
+                case SDLK_DOWN:
+                    speed *= 0.1f;
+                    break;
+                case SDLK_RETURN:
+                    speed = 0.0f;
+                    break;
+                case SDLK_SPACE:
+                    SDL_SetRelativeMouseMode(SDL_GetRelativeMouseMode() ? SDL_FALSE : SDL_TRUE);
+                    break;
             }
             break;
+        }
         default:
             SDLWindow::HandleSDLEvent(e);
     }

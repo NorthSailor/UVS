@@ -36,6 +36,8 @@ protected:
     glm::mat4 m_camera;
     
     PlanetScape::Universe m_universe;
+    
+    float speed;
 };
 
 #endif // UVSWINDOW_H

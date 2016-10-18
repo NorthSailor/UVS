@@ -13,5 +13,5 @@ void main() {
 out vec4 color;
 
 void main() {
-    color = vec4(1.0f, 1, 0.6f, 1);
+    color = vec4(.4f, .2f, .2f, 1);
 }

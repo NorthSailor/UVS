@@ -45,6 +45,9 @@ SDLWindow::SDLWindow(std::string title, bool fullscreen) :
     }
 #endif
     
+    // Use an inverted depth buffer.
+    glDepthRange(1.0, 0.0);
+    
     if (glGetError() == GL_INVALID_ENUM)
         Log(WARNING, "OpenGL sent INVALID_ENUM.");
 
