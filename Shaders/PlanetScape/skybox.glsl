@@ -1,5 +1,5 @@
 #COMMON
-#version 330 core
+#version 410 core
 
 #VERTEX
 uniform mat4 invTransform;
