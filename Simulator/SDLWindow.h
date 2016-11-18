@@ -9,6 +9,7 @@ class SDLWindow
 {
 public:
     SDLWindow(std::string title, bool fullscreen = false);
+    ~SDLWindow();
 
     void Show();
     int GetWidth() const { return m_width; }

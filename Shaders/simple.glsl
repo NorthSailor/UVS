@@ -34,7 +34,7 @@ in VS_OUT {
 out vec4 fragColor;
 
 void main() {
-	vec4 skyDiffuse = texture2D(skySampler, fs_in.plainUV);
-	vec4 earthDiffuse = texture2D(earthSampler, fs_in.UV);
+	vec4 skyDiffuse = texture(skySampler, fs_in.plainUV);
+	vec4 earthDiffuse = texture(earthSampler, fs_in.UV);
 	fragColor = mix(skyDiffuse, earthDiffuse, pow(mixingFactor, 0.5));
 }

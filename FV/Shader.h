@@ -1,7 +1,7 @@
 #ifndef FV_SHADER_H
 #define FV_SHADER_H
 
-#include <GL/glew.h>
+#include "OpenGL.h"
 #include <string>
 
 namespace FV {
@@ -17,8 +17,8 @@ public:
         FRAGMENT = GL_FRAGMENT_SHADER,
         TESS_CONTROL = GL_TESS_CONTROL_SHADER,
         TESS_EVAL = GL_TESS_EVALUATION_SHADER,
-        GEOMETRY = GL_GEOMETRY_SHADER,
-        COMPUTE = GL_COMPUTE_SHADER
+        GEOMETRY = GL_GEOMETRY_SHADER
+        // No macOS support for OpenGL compute shaders!
     };
 
     /**

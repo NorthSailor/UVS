@@ -64,6 +64,15 @@ public:
      * then returns. Blocks the calling thread.
      */
     void FinishLoading();
+    
+    /**
+     * Returns the absolute (or relative to the working directory) path of a
+     * resource.
+     * The path relative to the resource folder.
+     */
+    inline std::string GetResourcePath(std::string path) {
+        return m_path + path;
+    }
 
 protected:
     std::string m_path;

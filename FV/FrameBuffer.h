@@ -1,7 +1,7 @@
 #ifndef FV_FRAMEBUFFER_H
 #define FV_FRAMEBUFFER_H
 
-#include <GL/glew.h>
+#include "OpenGL.h"
 #include "Mesh.h"
 
 namespace FV {
@@ -24,7 +24,7 @@ public:
         COLOR_BIT = GL_COLOR_BUFFER_BIT,
         DEPTH_BIT = GL_DEPTH_BUFFER_BIT,
         STENCIL_BIT = GL_STENCIL_BUFFER_BIT,
-        ACCUM_BIT = GL_ACCUM_BUFFER_BIT,
+        // ACCUM_BIT = GL_ACCUM_BUFFER_BIT, -- No macOS support.
         COLOR_DEPTH_BIT = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
     };
 

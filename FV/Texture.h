@@ -1,9 +1,10 @@
 #ifndef GL_TEXTURE_H
 #define GL_TEXTURE_H
 
-#include <GL/glew.h>
+#include "OpenGL.h"
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace FV {
 
@@ -15,7 +16,19 @@ class Texture
 public:
     enum Target {
         TEX_2D = GL_TEXTURE_2D,
-        TEX_2D_MULTISAMPLE = GL_TEXTURE_2D_MULTISAMPLE
+        TEX_2D_MULTISAMPLE = GL_TEXTURE_2D_MULTISAMPLE,
+        TEX_CUBE_MAP = GL_TEXTURE_CUBE_MAP
+    };
+   
+    //! Keep in mind that normally, OpenGL uses Y as the upwards direction,
+    //! while UVS uses Z.
+    enum CubeMapFace {
+        X_PLUS = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        X_MINUS = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        Y_PLUS = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        Y_MINUS = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        Z_PLUS = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+        Z_MINUS = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
     };
 
     enum Format {
@@ -202,6 +215,7 @@ public:
     void SetImage2DAsync(int width, int height, void *data,
                          Format iformat = RGBA, Type type = UBYTE,
                          Format format = RGBA);
+    
     /**
      * Sets the contents of the texture.
      * The data is immediately send to the GPU. This means that you need to
@@ -220,6 +234,32 @@ public:
                     Format iformat = RGBA, Type type = UBYTE,
                     Format format = RGBA, int border = 0);
 
+    /**
+     * Sets the contents of the texture.
+     * The data is immediately send to the GPU. This means that you need to
+     * call this function from your main OpenGL thread.
+     * @param face The face of the cube map where the texture should be
+     *             attached.
+     * @param width The width of the texture in texels.
+     * @param height The height of the texture in texels.
+     * @param data Pointer to the data to be copied.
+     * @param iformat The internal format of the texture.
+     * @param type The type of the pixel components.
+     * @param format The format of the data.
+     * @param border The texture's border color.
+     * @note The texture must be bound before this method is called.
+     */
+    void SetCubemapFace(CubeMapFace face, int width, int height, void *data,
+                        Format iformat = RGBA, Type type = UBYTE,
+                        Format format = RGBA, int border = 0);
+    
+    /**
+     * Loads a list of cubemap faces to a cubemap texture.
+     * @param A list of the filenames. It must contain six elements.
+     * @note The texture is bound on unit 0.
+     */
+    void LoadCubemap(std::vector<std::string> faces);
+    
     /**
      * Loads a texture from the given filename.
      * @param filename Path to the texture file.

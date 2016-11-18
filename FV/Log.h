@@ -7,9 +7,12 @@ namespace FV {
 //! The developer should then be able to select which types of log messages
 //! should be ignored and which ones should be shown.
 enum LogSeverity {
-    INFO, //! Does not disrupt the execution of the program.
-    WARNING, //! Slight disruption of the execution but not a fatal error.
-    ERROR //! The program has encountered a critical error and needs to terminate.
+    //! Does not disrupt the execution of the program.
+    INFO,
+    //! Slight disruption of the execution but not a fatal error.
+    WARNING,
+    //! The program has encountered a critical error and needs to terminate.
+    ERROR
 };
 
 /**

@@ -1,12 +1,9 @@
 #include "UVSWindow.h"
 #include <SDL2/SDL.h>
-#include <FV/Log.h>
-#include <FV/Exception.h>
-#include <FV/Program.h>
-#include <FV/Buffer.h>
-#include <FV/VertexArray.h>
-#include <FV/Texture.h>
-#include <FV/ObjectLoader.h>
+#include "FV/Log.h"
+#include "FV/Exception.h"
+#include "PlanetScape/Quad.h"
+namespace PS = PlanetScape;
 using namespace FV;
 
 int real_main(int, char **)
@@ -27,7 +24,7 @@ int real_main(int, char **)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
 
-    UVSWindow window(false);
+    UVSWindow window(true);
     window.Show();
 
     return 0;
